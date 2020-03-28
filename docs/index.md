@@ -10,11 +10,13 @@
 
 ### Confirmed cases versus fatalities
 ![countrywise confirmed cases versus fatalities](./assets/images/cases-deaths-ll.svg)
-Death rates
-- 4% red
+Death rate iso lines
+- 0.1% light blue (Influenza A)
+- 0.4% green
 - 1% blue
-- 0.5% green
-
+- 2.25% grey (Spanish Flue, 1918)
+- 4.0% red
+- 11% purple (SARS)
 
 ### Account of active cases, recovered persons and fatalities
 

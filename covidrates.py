@@ -244,17 +244,22 @@ if fOptions['deathrate']:
     ax.set_xlim(xmin=1)
     ax.set_ylim(ymin=1)
 
+    X = np.linspace(1,maxCases)
+    ax.plot(X, 0.001 * X, linestyle=':', color='xkcd:sky blue')
+    ax.plot(X, 0.004 * X, linestyle='-', color='xkcd:leaf green')
+    ax.plot(X, 0.01 * X, linestyle='-', color='#4040FF')
+    ax.plot(X, 0.025 * X, linestyle=':', color='xkcd:grey')
+    ax.plot(X, 0.04 * X, linestyle='-', color='#FF4040')
+    ax.plot(X, 0.11 * X, linestyle=':', color='xkcd:light purple')
+
     for c in dfD.index:
         cData = dfD.loc[c]
         x = cData['confirmed']
         y = cData['deaths']
-        ax.text(x, y, c, rotation=30, size=7)
+        rnd = np.random.random()*20 - 10
+        ax.text(x, y, c, rotation=20+rnd, size=8)
 
 
-    X = np.linspace(1,maxCases)
-    ax.plot(X, 0.005 * X, linestyle=':', color='#40FF40')
-    ax.plot(X, 0.01 * X, linestyle=':', color='#4040FF')
-    ax.plot(X, 0.04 * X, linestyle=':', color='#FF4040')
 
     # %%
     plt.subplot(ax)
