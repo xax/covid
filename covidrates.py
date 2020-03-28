@@ -1,6 +1,7 @@
 #!/bin/env python3
-# covincidence
-# Copyright (C) by XA, III 2020. All rights reserved
+cName = 'covidrates'
+cVersion = '1.0.0'
+cCopyright = 'Copyright (C) by XA, III 2020. All rights reserved.'
 #
 # How to set it up:
 #  $ git clone https://github.com/CSSEGISandData/COVID-19.git
@@ -16,6 +17,9 @@ import matplotlib.dates as mdates
 import numpy as np
 import pandas as pd
 
+import sys
+import getopt
+
 
 # %%
 # Johns Hopkins data
@@ -27,15 +31,59 @@ pDataDaily = 'csse_covid_19_daily_reports/'
 pImagesBase = './docs/assets/images/'
 
 
-fAll = True
+def usage ():
+    print(f"""\
+{cName} {cVersion} -- Covid-19 data visualization
+{cCopyright}
+
++ Usage:
+    {cName} {{ -h | -a | -cprCd }}
+
+    -a      -- show all graphics
+
+    -c      -- cases diagram
+    -p      -- prevalence diagrams
+    -r      -- rates diagrams
+    -C      -- cases timeline
+    -d      -- fatalities v cases
+""")
+    pass
+
+
+fAll = False
 fOptions = {
         'cases': False,
         'prevalence': False,
         'rates': False,
         'tl_cases': False,
-        'deathrate': True,
+        'deathrate': False,
         'dummy': False
         }
+
+try:
+    optlist, args = getopt.gnu_getopt(sys.argv[1:], 'hacprCd')
+except getopt.GetoptError as err:
+    print(err)
+    usage()
+    sys.exit(2)
+
+for o, a in optlist:
+    if o == '-h':
+        usage()
+        sys.exit(2)
+    elif o == '-a':
+        fAll = True
+    elif o == '-c':
+        fOptions['cases'] = True
+    elif o == '-p':
+        fOptions['prevalence'] = True
+    elif o == '-r':
+        fOptions['rates'] = True
+    elif o == '-C':
+        fOptions['tl_cases'] = True
+    elif o == '-d':
+        fOptions['deathrate'] = True
+
 
 if fAll:
     for k in fOptions.keys():
