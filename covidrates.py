@@ -88,7 +88,7 @@ dfData['deathrate'] = dfData['deaths'] / dfData['population'] * 100000
 dfData['recoveredrate'] = dfData['recovered'] / dfData['population'] * 100000
 #
 dfData.loc['US','active'] = dfData['confirmed']['US'] - dfData['recovered']['US'] - dfData['deaths']['US']
-dfData.loc['United States','active'] = dfData.loc['US','active']
+#dfData.loc['United States','active'] = dfData.loc['US','active']
 
 
 # %%
@@ -256,8 +256,8 @@ if fOptions['deathrate']:
         cData = dfD.loc[c]
         x = cData['confirmed']
         y = cData['deaths']
-        rnd = np.random.random()*20 - 10
-        ax.text(x, y, c, rotation=20+rnd, size=8)
+        rnd = np.random.random() * 40 - 20
+        ax.text(x, y, c, rotation=20+rnd, size=9)
 
 
 
