@@ -1,6 +1,6 @@
-#!/bin/env python3
+#!/usr/bin/env python3
 cName = 'covidrates'
-cVersion = '1.1.0'
+cVersion = '1.2.0'
 cCopyright = 'Copyright (C) by XA, III 2020. All rights reserved.'
 #
 # How to set it up:
@@ -259,18 +259,16 @@ if fOptions['rates']:
 
 
 # %%
-def autolabel(rects):
-    """Attach a text label above each bar in *rects*, displaying its height."""
-    for rect in rects:
-        width = rect.get_width()
-        ax.annotate('{}'.format(width),
-                    xy=(rect.get_y() + rect.get_height() / 2, width),
-                    xytext=(3, 0),  # 3 points horizontal offset
-                    textcoords="offset points",
-                    ha='left', va='center')
+# def autolabel(rects):
+#     """Attach a text label above each bar in *rects*, displaying its height."""
+#     for rect in rects:
+#         width = rect.get_width()
+#         ax.annotate('{}'.format(width),
+#                     xy=(rect.get_y() + rect.get_height() / 2, width),
+#                     xytext=(3, 0),  # 3 points horizontal offset
+#                     textcoords="offset points",
+#                     ha='left', va='center')
 
-#autolabel(ax)
-#ax.set_yticks(dfB['deaths'])
 
 
 # ############################################################################
@@ -303,6 +301,7 @@ if fOptions['deathrate']:
     ax.plot(X, 0.11 * X, linestyle=':', color='xkcd:light purple')
 
     for c in dfD.index:
+        # NB: this is slow!
         cData = dfD.loc[c]
         x = cData['confirmed']
         y = cData['deaths']
@@ -359,6 +358,15 @@ if fOptions['tl_cases']:
                       figsize=(13,8)
                      )
 
+    X = df.index
+    Y = np.linspace(0, df.index.size-1, num=df.index.size)
+    # c = df.loc[df.index.min()].max()
+    c = df.loc[df.index.min()]['South Korea']
+
+    ax.plot(X, c * 2**(Y/10), linestyle=':', color='xkcd:sky blue')
+    ax.plot(X, c * 2**(Y/4), linestyle=':', color='xkcd:light red')
+    ax.plot(X, c * 2**(Y/2), linestyle=':', color='xkcd:reddish gray')
+
     # ax.xaxis.set_major_locator(locator)
     # ax.xaxis.set_major_formatter(formatter)
     axRotateLabels(ax)
@@ -370,6 +378,8 @@ if fOptions['tl_cases']:
     # %%
     plt.subplot(ax)
     plt.savefig(pImagesBase + 'tl-cases-rl.svg', format='svg')
+
+
 
 
 plt.show()
