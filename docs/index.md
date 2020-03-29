@@ -8,8 +8,9 @@
 ![population relative cases (log)](./assets/images/tl-cases-rl.svg)
 
 Growth rates (calibrated with South Korea):
-color        | double every *n* days   |
------------- | ----------------------: |
+
+color        | double every *n* days
+------------ | ----------------------:
 light blue   |  10
 red          |  4
 grey         |  2
@@ -19,6 +20,7 @@ grey         |  2
 ![countrywise confirmed cases versus fatalities](./assets/images/cases-deaths-ll.svg)
 
 Death rate iso lines:
+
 color        | rate   | notes
 ------------ | ------ | ------
 *light blue* |  0.1%  | Influenza A
