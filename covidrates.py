@@ -1,6 +1,6 @@
 #!/bin/env python3
 cName = 'covidrates'
-cVersion = '1.0.0'
+cVersion = '1.1.0'
 cCopyright = 'Copyright (C) by XA, III 2020. All rights reserved.'
 #
 # How to set it up:
@@ -19,12 +19,14 @@ import pandas as pd
 
 import sys
 import getopt
-
+import datetime
 
 # %%
 # Johns Hopkins data
 # https://github.com/CSSEGISandData/COVID-19
-pDataFilename = '03-27-2020'
+theDate = datetime.date(2020, 3, 28)
+#
+pDataFilename = theDate.strftime('%m-%d-%Y')
 pDataBase = './COVID-19/csse_covid_19_data/'
 pDataDaily = 'csse_covid_19_daily_reports/'
 
@@ -151,7 +153,7 @@ if fOptions['cases']:
     ax = dfA.head(20).plot.barh(stacked=True, logx=False,
                                 y=['active', 'recovered', 'deaths'],
                                 color=('xkcd:bright blue', 'xkcd:leaf green', 'xkcd:reddish gray'),
-                                title='Case numbers ('+pDataFilename+')',
+                                title='Case numbers ('+theDate.isoformat()+')',
                                 figsize=(10,8))
     # %%
     ax.set_xlabel('capita')
@@ -171,7 +173,7 @@ if fOptions['prevalence']:
     ax = dfB.head(30).plot.barh(stacked=False, logx=False,
                                 y='prevalence',
                                 color='xkcd:bright blue', #('xkcd:bright blue', 'xkcd:leaf green', 'xkcd:reddish gray'),
-                                title='Prevalence ('+pDataFilename+')',
+                                title='Prevalence ('+theDate.isoformat()+')',
                                 figsize=(10,8))
     # %%
     ax.set_xlabel('capita / 100000')
@@ -187,7 +189,7 @@ if fOptions['prevalence']:
     ax = dfB.head(30).plot.barh(stacked=False, logx=False,
                                 y='prevalence_agg',
                                 color='xkcd:bright blue', #('xkcd:bright blue', 'xkcd:leaf green', 'xkcd:reddish gray'),
-                                title='Prevalence::agregate ('+pDataFilename+')',
+                                title='Prevalence::agregate ('+theDate.isoformat()+')',
                                 figsize=(10,8))
     # %%
     ax.set_xlabel('capita / 100000')
@@ -208,7 +210,7 @@ if fOptions['rates']:
       ax = dfC.head(30).plot.barh(stacked=False, logx=True,
                                   y='deathrate',
                                   color='xkcd:reddish gray', #('xkcd:bright blue', 'xkcd:leaf green', 'xkcd:reddish gray'),
-                                  title='Fatalities rate ('+pDataFilename+')',
+                                  title='Fatalities rate ('+theDate.isoformat()+')',
                                   figsize=(10,8))
       ax.set_xlabel('capita / 100000')
       ax.set_ylabel('Country')
@@ -224,7 +226,7 @@ if fOptions['rates']:
       ax = dfC.head(30).plot.barh(stacked=False, logx=True,
                                   y='recoveredrate',
                                   color='xkcd:leaf green', #, 'xkcd:reddish gray'), #('xkcd:bright blue', 'xkcd:leaf green', 'xkcd:reddish gray'),
-                                  title='Recovered rate ('+pDataFilename+')',
+                                  title='Recovered rate ('+theDate.isoformat()+')',
                                   figsize=(10,12))
       ax.set_xlabel('capita / 100000')
       ax.set_ylabel('Country')
@@ -241,7 +243,7 @@ if fOptions['rates']:
       ax = dfC.head(30).plot.barh(stacked=False, logx=True,
                                   y=['deathrate', 'recoveredrate'],
                                   color=('xkcd:reddish gray', 'xkcd:leaf green'),
-                                  title='Fatalities / Recovered rate ('+pDataFilename+')',
+                                  title='Fatalities / Recovered rate ('+theDate.isoformat()+')',
                                   figsize=(10,10))
       ax.set_xlabel('capita / 100000')
       ax.set_ylabel('Country')
@@ -282,7 +284,7 @@ if fOptions['deathrate']:
                     y='deaths',
                     s=dfD['population'] / maxCases * 750,
                     logx=True, logy=True,
-                    title='Confirmed cases versus fatalities',
+                    title='Confirmed cases versus fatalities ('+theDate.isoformat()+')',
                     figsize=(13,8)
     )
 
@@ -334,7 +336,7 @@ if fOptions['tl_cases']:
     ax = df.plot.line(
                       logy=False,
                       marker='o',
-                      title='Confirmed cases per 100.000 capita',
+                      title='Confirmed cases per 100.000 capita ('+theDate.isoformat()+')',
                       figsize=(13,8)
                      )
 
@@ -353,7 +355,7 @@ if fOptions['tl_cases']:
     ax = df.plot.line(
                       logy=True,
                       marker='o',
-                      title='Confirmed cases per 100.000 capita (log-y)',
+                      title='Confirmed cases per 100.000 capita (log-y) ('+theDate.isoformat()+')',
                       figsize=(13,8)
                      )
 
