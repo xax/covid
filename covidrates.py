@@ -331,7 +331,7 @@ if fOptions['tl_cases']:
     dftlCasesPop = dftlCasesPop.apply(lambda data: data / dftlCasesPop['population'][data.index] * 100000)
     dftlCasesPop = dftlCasesPop.iloc[:,0:-1]
 
-    df = dftlCasesPop.loc[['Belgium','Germany','France','Italy','Spain','South Korea','China','United States']].T
+    df = dftlCasesPop.loc[['Belgium','Germany','Switzerland','France','Italy','Spain','Japan','South Korea','China','United States']].T
 
     ax = df.plot.line(
                       logy=False,
