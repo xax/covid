@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
 cName = 'covidrates'
-cVersion = '1.4.0'
+cVersion = '1.5.0'
 cCopyright = 'Copyright (C) by XA, III 2020. All rights reserved.'
 #
-# How to set it up:
-#  $ git clone https://github.com/CSSEGISandData/COVID-19.git # vJHUData<=1
-#  $ git clone -b wed-data https://github.com/CSSEGISandData/COVID-19.git # vJHUData==2
-#  $ git clone https://github.com/coviddata/coviddata.git
-#  $ wget https://raw.githubusercontent.com/lorey/list-of-countries/master/csv/countries.csv
-#  $ wget https://download.geonames.org/export/dump/countryInfo.txt
-#  $ python3 ./covidrates.py
+# * How to set it up:
+#
+#   #1 clone [JHUCSSE] repository
+#    $ git clone -b wed-data https://github.com/CSSEGISandData/COVID-19.git
+#
+#   #2 clone [CovidData] repository
+#    $ git clone https://github.com/coviddata/coviddata.git
+#
+#   #3 retrieve GeoNmes [CountryDataGN] database
+#    $ wget https://download.geonames.org/export/dump/countryInfo.txt
+#
+#   #*
+#    $ python3 ./covidrates.py -h
 #
 # %%
 import matplotlib as mpl
@@ -24,8 +30,6 @@ import getopt
 import datetime
 
 # %%
-# Johns Hopkins data
-# https://github.com/CSSEGISandData/COVID-19
 theDate = datetime.date(2020, 3, 29)
 #
 
@@ -58,8 +62,6 @@ def usage ():
 """)
     pass
 
-vJHUData = 2
-vCountryData = 1
 
 fAll = False
 fOptions = {
@@ -95,7 +97,6 @@ for o, a in optlist:
     elif o == '-d':
         fOptions['deathrate'] = True
 
-
 if fAll:
     for k in fOptions.keys():
         fOptions[k] = True
@@ -112,28 +113,14 @@ def dfLoadGeoNamesData (fname='./countryInfo.txt'):
                        index_col='country',
                        names=['ISO', 'ISO3', 'ISOn', 'fips', 'country', 'capital', 'area', 'population', 'continent', 'tld', 'currencyCode', 'currencyName', 'phone', 'postalCodeFmt', 'postalCodeRegEx', 'languages', 'geonameId', 'neighbors', 'fips_equiv']
                        )
-    # FIXES: patching database glitches
+    # [FIXES] patching database glitches
     df.at['Eritrea', 'population'] = 5750433 # https://en.wikipedia.org/wiki/Eritrea
     df.loc['US'] = df.loc['United States']
-    #
+    # [/FIXES]
     return df
 
 
-def dfLoadCountriesStatJHUv1 (fname):
-    return pd.read_csv(fname,
-                       header=0,
-                       names=['state', 'country', 'upd', 'confirmed', 'deaths', 'recovered', 'lat', 'lon']
-                       )
-
-
-def dfLoadCountriesStatJHUv2 (fname):
-    return pd.read_csv(fname,
-                       header=0,
-                       names=['fips', 'admin2', 'state', 'country', 'upd', 'lat', 'lon', 'confirmed', 'deaths', 'recovered', 'active', 'loc']
-                       ) \
-        .groupby('country').sum()
-
-
+# %%
 def dfLoadCountriesDataStatJHUWDv2 (fname=pDataJHUWDBase+'cases_country.csv'):
     # https://raw.githubusercontent.com/CSSEGISandData/COVID-19/web-data/data/cases_country.csv
     return pd.read_csv(fname,
@@ -156,47 +143,38 @@ def dfLoadDataTLCovAPIv1 (fname=pDataCovidDataBase+'data/sources/jhu_csse/standa
         .groupby(level=[0,1]).sum()
 
 
-def dfLoadDay (date):
-    pass
-
-
+# %%
 def axRotateLabels (ax):
     for label in ax.get_xticklabels():
         label.set_rotation(40)
         label.set_horizontalalignment('right')
 
-
 # %%
-if vCountryData == 0:
-    # https://raw.githubusercontent.com/lorey/list-of-countries/master/csv/countries.csv
-    dfCountryData = pd.read_csv('./countries.csv', sep=';', index_col='name')
-    dfCountryData.loc['US'] = dfCountryData.loc['United States']
-else:
-    dfCountryData = dfLoadGeoNamesData()
+# def autolabel(rects):
+#     """Attach a text label above each bar in *rects*, displaying its height."""
+#     for rect in rects:
+#         width = rect.get_width()
+#         ax.annotate('{}'.format(width),
+#                     xy=(rect.get_y() + rect.get_height() / 2, width),
+#                     xytext=(3, 0),  # 3 points horizontal offset
+#                     textcoords="offset points",
+#                     ha='left', va='center')
 
-# %%
-if vJHUData == 0:
-    dfCOVID = dfLoadCountriesStatJHUv1(pDataJHUBase + pDataJHUDaily + '03-22-2020.csv')
-    dfData = pd.merge(dfCOVID, dfCountryData, how='left', left_on='country', right_on='name')
-elif vJHUData == 1:
-    dfCOVID = dfLoadCountriesStatJHUv2(pDataJHUBase + pDataJHUDaily + pDataJHUFilename + '.csv')
-    #df = dfMerged.loc[dfMerged['country'].notna(), ['country', 'confirmed', 'recovered', 'deaths', 'population']]
-    if vCountryData == 0:
-        dfData = dfCOVID.merge(dfCountryData, how='inner', left_index=True, right_on='name')
-    else:
-        dfData = dfCOVID.merge(dfCountryData, how='inner', left_index=True, right_index=True)
-else:
-    dfCOVID = dfLoadCountriesDataStatJHUWDv2()
-    if vCountryData == 0:
-        dfData = dfCOVID.merge(dfCountryData, how='inner', left_index=True, right_on='name')
-    else:
-        dfData = dfCOVID.merge(dfCountryData, how='inner', left_index=True, right_index=True)
 
 
 # %%
-# FIXES: patching database glitches
+dfCountryData = dfLoadGeoNamesData()
+
+
+# %%
+dfCOVID = dfLoadCountriesDataStatJHUWDv2()
+dfData = dfCOVID.merge(dfCountryData, how='inner', left_index=True, right_index=True)
+
+# %%
+# [FIXES] patching database glitches
 dfData.at['US', 'active'] = dfData.at['US', 'confirmed'] - dfData.at['US', 'recovered'] - dfData.at['US', 'deaths']
 #dfData.at['United States', 'active'] = dfData.at['US', 'active']
+#[/FIXES]
 
 # %%
 # Calculate additional columns
@@ -205,8 +183,6 @@ dfData['prevalence_agg'] = dfData['confirmed'] / dfData['population'] * 100000
 dfData['deathrate'] = dfData['deaths'] / dfData['population'] * 100000
 dfData['recoveredrate'] = dfData['recovered'] / dfData['population'] * 100000
 #
-
-#dfData.loc['United States','active'] = dfData.loc['US','active']
 
 
 # %%
@@ -232,6 +208,8 @@ if fOptions['cases']:
     plt.savefig(pImagesBase + 'cases.svg', format='svg')
 
 
+
+
 # %%
 # ########################################################################
 
@@ -240,14 +218,13 @@ if fOptions['prevalence']:
     dfB = dfData.sort_values(by='prevalence', ascending=False)
     ax = dfB.head(30).plot.barh(stacked=False, logx=False,
                                 y='prevalence',
-                                color='xkcd:bright blue', #('xkcd:bright blue', 'xkcd:leaf green', 'xkcd:reddish gray'),
+                                color='xkcd:bright blue',
                                 title='Prevalence ('+theDate.isoformat()+')',
                                 figsize=(10,8))
     # %%
     ax.set_xlabel('capita / 100000')
     ax.set_ylabel('Country')
 
-    #plt.show()
     plt.subplot(ax)
     plt.savefig(pImagesBase + 'preval-r.svg', format='svg')
 
@@ -256,14 +233,13 @@ if fOptions['prevalence']:
     dfB = dfData.sort_values(by='prevalence_agg', ascending=False)
     ax = dfB.head(30).plot.barh(stacked=False, logx=False,
                                 y='prevalence_agg',
-                                color='xkcd:bright blue', #('xkcd:bright blue', 'xkcd:leaf green', 'xkcd:reddish gray'),
+                                color='xkcd:bright blue',
                                 title='Prevalence::agregate ('+theDate.isoformat()+')',
                                 figsize=(10,8))
     # %%
     ax.set_xlabel('capita / 100000')
     ax.set_ylabel('Country')
 
-    #plt.show()
     plt.subplot(ax)
     plt.savefig(pImagesBase + 'preval-agg-r.svg', format='svg')
 
@@ -277,7 +253,7 @@ if fOptions['rates']:
       # %%
       ax = dfC.head(30).plot.barh(stacked=False, logx=True,
                                   y='deathrate',
-                                  color='xkcd:reddish gray', #('xkcd:bright blue', 'xkcd:leaf green', 'xkcd:reddish gray'),
+                                  color='xkcd:reddish gray',
                                   title='Fatalities rate ('+theDate.isoformat()+')',
                                   figsize=(10,8))
       ax.set_xlabel('capita / 100000')
@@ -321,21 +297,11 @@ if fOptions['rates']:
       plt.savefig(pImagesBase + 'deaths-recov-rl.svg', format='svg')
 
 
+
 # %%
 #dfC = dfData.sort_values(by='recoveredrate', ascending=False)
 # %%
 
-
-# %%
-# def autolabel(rects):
-#     """Attach a text label above each bar in *rects*, displaying its height."""
-#     for rect in rects:
-#         width = rect.get_width()
-#         ax.annotate('{}'.format(width),
-#                     xy=(rect.get_y() + rect.get_height() / 2, width),
-#                     xytext=(3, 0),  # 3 points horizontal offset
-#                     textcoords="offset points",
-#                     ha='left', va='center')
 
 
 
@@ -377,7 +343,6 @@ if fOptions['deathrate']:
         ax.text(x, y, c, rotation=20+rnd, size=9)
 
 
-
     # %%
     plt.subplot(ax)
     plt.savefig(pImagesBase + 'cases-deaths-ll.svg', format='svg')
@@ -393,10 +358,7 @@ if fOptions['deathrate']:
 if fOptions['tl_cases']:
     dftlCases = dfLoadCasesTLCovAPIv1()
 
-    if vCountryData == 0:
-        dftlCasesPop = dftlCases.merge(dfCountryData['population'], how='inner', left_index=True, right_on='name')
-    else:
-        dftlCasesPop = dftlCases.merge(dfCountryData['population'], how='inner', left_index=True, right_index=True)
+    dftlCasesPop = dftlCases.merge(dfCountryData['population'], how='inner', left_index=True, right_index=True)
     dftlCasesPop = dftlCasesPop.apply(lambda data: data / dftlCasesPop['population'][data.index] * 100000)
     dftlCasesPop = dftlCasesPop.iloc[:,0:-1]
 
@@ -417,7 +379,6 @@ if fOptions['tl_cases']:
     ax.legend(title='Countries')
     ax.set_ylabel('cases · population${}^{-1}$ · 100000')
 
-    #plt.show()
     plt.subplot(ax)
     plt.savefig(pImagesBase + 'tl-cases-r.svg', format='svg')
 
