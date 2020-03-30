@@ -53,7 +53,7 @@ red          |  4%    |
       - [Country information][CountryData1] by *lorey*, preprocessed [GeoNames] data
 
 [JHUCSSE]: https://github.com/CSSEGISandData/COVID-19 "2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE"
-[CovidData]: https://github.com/CSSEGISandData/covid-api "CovidData, preprocessed JHU CSSE and New York Times data"
+[CovidData]: https://github.com/coviddata/coviddata "CovidData, preprocessed JHU CSSE and New York Times data"
 [NYTData]: https://github.com/nytimes/covid-19-data "New York Times Covid-19 US states data"
-[CountryData1]: https://github.com/CSSEGISandData/covid-api "GeoNames country data preprocessed by \"lorey\""
+[CountryData1]: https://github.com/lorey/list-of-countries "GeoNames country data preprocessed by ”lorey“"
 [GeoNames]: http://www.geonames.org/ "GeoNames"
