@@ -46,6 +46,7 @@ red          |  4%    |
 ![population relative deaths / recovered](./assets/images/deaths-recov-rl.svg)
 
 
+<sup><sub>Portions copyright © XA, III 2020. All rights reserved.</sub></sup>
 
 [^1]: Data sources:
       - [2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by *Johns Hopkins CSSE*][JHUCSSE][^3]
