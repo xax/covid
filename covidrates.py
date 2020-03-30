@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 cName = 'covidrates'
-cVersion = '1.3.1'
+cVersion = '1.4.0'
 cCopyright = 'Copyright (C) by XA, III 2020. All rights reserved.'
 #
 # How to set it up:
-#  $ git clone https://github.com/CSSEGISandData/COVID-19.git
+#  $ git clone https://github.com/CSSEGISandData/COVID-19.git # vJHUData<=1
+#  $ git clone -b wed-data https://github.com/CSSEGISandData/COVID-19.git # vJHUData==2
 #  $ git clone https://github.com/coviddata/coviddata.git
 #  $ wget https://raw.githubusercontent.com/lorey/list-of-countries/master/csv/countries.csv
 #  $ wget https://download.geonames.org/export/dump/countryInfo.txt
@@ -27,11 +28,14 @@ import datetime
 # https://github.com/CSSEGISandData/COVID-19
 theDate = datetime.date(2020, 3, 29)
 #
-pDataJHUFilename = theDate.strftime('%m-%d-%Y')
-pDataJHUBase = './COVID-19/csse_covid_19_data/'
-pDataJHUDaily = 'csse_covid_19_daily_reports/'
 
-pDataCovidDataBase = './covid-api/'
+pDataJHUData = './COVID-19/'
+pDataJHUWDBase = pDataJHUData + '/data/'
+pDataJHUBase = pDataJHUData + '/csse_covid_19_data/'
+pDataJHUDaily = 'csse_covid_19_daily_reports/'
+pDataJHUFilename = theDate.strftime('%m-%d-%Y')
+
+pDataCovidDataBase = './coviddata/'
 
 pImagesBase = './docs/assets/images/'
 
@@ -54,7 +58,7 @@ def usage ():
 """)
     pass
 
-vJHUData = 1
+vJHUData = 2
 vCountryData = 1
 
 fAll = False
@@ -99,7 +103,8 @@ if fAll:
 
 # %%
 def dfLoadGeoNamesData (fname='./countryInfo.txt'):
-    df = pd.read_csv(fname,
+    # https://download.geonames.org/export/dump/countryInfo.txt
+    df = pd.read_csv('./countryInfo.txt',#fname,
                        skiprows=51,
                        skip_blank_lines=True,
                        delimiter="\t",
@@ -107,7 +112,10 @@ def dfLoadGeoNamesData (fname='./countryInfo.txt'):
                        index_col='country',
                        names=['ISO', 'ISO3', 'ISOn', 'fips', 'country', 'capital', 'area', 'population', 'continent', 'tld', 'currencyCode', 'currencyName', 'phone', 'postalCodeFmt', 'postalCodeRegEx', 'languages', 'geonameId', 'neighbors', 'fips_equiv']
                        )
+    # FIXES: patching database glitches
+    df.at['Eritrea', 'population'] = 5750433 # https://en.wikipedia.org/wiki/Eritrea
     df.loc['US'] = df.loc['United States']
+    #
     return df
 
 
@@ -122,6 +130,15 @@ def dfLoadCountriesStatJHUv2 (fname):
     return pd.read_csv(fname,
                        header=0,
                        names=['fips', 'admin2', 'state', 'country', 'upd', 'lat', 'lon', 'confirmed', 'deaths', 'recovered', 'active', 'loc']
+                       ) \
+        .groupby('country').sum()
+
+
+def dfLoadCountriesDataStatJHUWDv2 (fname=pDataJHUWDBase+'cases_country.csv'):
+    # https://raw.githubusercontent.com/CSSEGISandData/COVID-19/web-data/data/cases_country.csv
+    return pd.read_csv(fname,
+                       header=0,
+                       names=['country', 'upd', 'lat', 'lon', 'confirmed', 'deaths', 'recovered', 'active']
                        ) \
         .groupby('country').sum()
 
@@ -161,21 +178,34 @@ else:
 if vJHUData == 0:
     dfCOVID = dfLoadCountriesStatJHUv1(pDataJHUBase + pDataJHUDaily + '03-22-2020.csv')
     dfData = pd.merge(dfCOVID, dfCountryData, how='left', left_on='country', right_on='name')
-else:
+elif vJHUData == 1:
     dfCOVID = dfLoadCountriesStatJHUv2(pDataJHUBase + pDataJHUDaily + pDataJHUFilename + '.csv')
     #df = dfMerged.loc[dfMerged['country'].notna(), ['country', 'confirmed', 'recovered', 'deaths', 'population']]
     if vCountryData == 0:
         dfData = dfCOVID.merge(dfCountryData, how='inner', left_index=True, right_on='name')
     else:
         dfData = dfCOVID.merge(dfCountryData, how='inner', left_index=True, right_index=True)
+else:
+    dfCOVID = dfLoadCountriesDataStatJHUWDv2()
+    if vCountryData == 0:
+        dfData = dfCOVID.merge(dfCountryData, how='inner', left_index=True, right_on='name')
+    else:
+        dfData = dfCOVID.merge(dfCountryData, how='inner', left_index=True, right_index=True)
+
 
 # %%
+# FIXES: patching database glitches
+dfData.at['US', 'active'] = dfData.at['US', 'confirmed'] - dfData.at['US', 'recovered'] - dfData.at['US', 'deaths']
+#dfData.at['United States', 'active'] = dfData.at['US', 'active']
+
+# %%
+# Calculate additional columns
 dfData['prevalence'] = dfData['active'] / dfData['population'] * 100000
 dfData['prevalence_agg'] = dfData['confirmed'] / dfData['population'] * 100000
 dfData['deathrate'] = dfData['deaths'] / dfData['population'] * 100000
 dfData['recoveredrate'] = dfData['recovered'] / dfData['population'] * 100000
 #
-dfData.loc['US','active'] = dfData['confirmed']['US'] - dfData['recovered']['US'] - dfData['deaths']['US']
+
 #dfData.loc['United States','active'] = dfData.loc['US','active']
 
 
