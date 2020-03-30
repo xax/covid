@@ -24,7 +24,7 @@ import datetime
 # %%
 # Johns Hopkins data
 # https://github.com/CSSEGISandData/COVID-19
-theDate = datetime.date(2020, 3, 28)
+theDate = datetime.date(2020, 3, 29)
 #
 pDataFilename = theDate.strftime('%m-%d-%Y')
 pDataBase = './COVID-19/csse_covid_19_data/'
