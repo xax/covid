@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 cName = 'covidrates'
-cVersion = '1.2.0'
+cVersion = '1.3.1'
 cCopyright = 'Copyright (C) by XA, III 2020. All rights reserved.'
 #
 # How to set it up:
 #  $ git clone https://github.com/CSSEGISandData/COVID-19.git
-#  $ git clone https://github.com/coviddata/covid-api.git
+#  $ git clone https://github.com/coviddata/coviddata.git
 #  $ wget https://raw.githubusercontent.com/lorey/list-of-countries/master/csv/countries.csv
+#  $ wget https://download.geonames.org/export/dump/countryInfo.txt
 #  $ python3 ./covidrates.py
 #
 # %%
@@ -26,9 +27,11 @@ import datetime
 # https://github.com/CSSEGISandData/COVID-19
 theDate = datetime.date(2020, 3, 29)
 #
-pDataFilename = theDate.strftime('%m-%d-%Y')
-pDataBase = './COVID-19/csse_covid_19_data/'
-pDataDaily = 'csse_covid_19_daily_reports/'
+pDataJHUFilename = theDate.strftime('%m-%d-%Y')
+pDataJHUBase = './COVID-19/csse_covid_19_data/'
+pDataJHUDaily = 'csse_covid_19_daily_reports/'
+
+pDataCovidDataBase = './covid-api/'
 
 pImagesBase = './docs/assets/images/'
 
@@ -51,6 +54,8 @@ def usage ():
 """)
     pass
 
+vJHUData = 1
+vCountryData = 1
 
 fAll = False
 fOptions = {
@@ -93,21 +98,50 @@ if fAll:
 
 
 # %%
-def dfLoadFile1 (fname):
+def dfLoadGeoNamesData (fname='./countryInfo.txt'):
+    df = pd.read_csv(fname,
+                       skiprows=51,
+                       skip_blank_lines=True,
+                       delimiter="\t",
+                       header=None,
+                       index_col='country',
+                       names=['ISO', 'ISO3', 'ISOn', 'fips', 'country', 'capital', 'area', 'population', 'continent', 'tld', 'currencyCode', 'currencyName', 'phone', 'postalCodeFmt', 'postalCodeRegEx', 'languages', 'geonameId', 'neighbors', 'fips_equiv']
+                       )
+    df.loc['US'] = df.loc['United States']
+    return df
+
+
+def dfLoadCountriesStatJHUv1 (fname):
     return pd.read_csv(fname,
                        header=0,
                        names=['state', 'country', 'upd', 'confirmed', 'deaths', 'recovered', 'lat', 'lon']
                        )
 
-def dfLoadFile2 (fname):
+
+def dfLoadCountriesStatJHUv2 (fname):
     return pd.read_csv(fname,
                        header=0,
                        names=['fips', 'admin2', 'state', 'country', 'upd', 'lat', 'lon', 'confirmed', 'deaths', 'recovered', 'active', 'loc']
-                       ). \
-        groupby('country').sum()
+                       ) \
+        .groupby('country').sum()
+
+
+def dfLoadCasesTLCovAPIv1 (fname=pDataCovidDataBase+'docs/v1/countries/cases.csv'):
+    # https://raw.githubusercontent.com/coviddata/coviddata/master/docs/v1/countries/cases.csv
+    return pd.read_csv(fname, index_col=0)
+
+
+def dfLoadDataTLCovAPIv1 (fname=pDataCovidDataBase+'data/sources/jhu_csse/standardized/standardized.csv'):
+    # https://raw.githubusercontent.com/coviddata/coviddata/master/data/sources/jhu_csse/standardized/standardized.csv
+    return pd.read_csv(fname,
+                       index_col=[0,1]
+                      ) \
+        .groupby(level=[0,1]).sum()
+
 
 def dfLoadDay (date):
     pass
+
 
 def axRotateLabels (ax):
     for label in ax.get_xticklabels():
@@ -116,20 +150,24 @@ def axRotateLabels (ax):
 
 
 # %%
-# https://github.com/lorey/list-of-countries
-dfCountryData = pd.read_csv('./countries.csv', sep=';', index_col='name')
-dfCountryData.loc['US'] = dfCountryData.loc['United States']
+if vCountryData == 0:
+    # https://raw.githubusercontent.com/lorey/list-of-countries/master/csv/countries.csv
+    dfCountryData = pd.read_csv('./countries.csv', sep=';', index_col='name')
+    dfCountryData.loc['US'] = dfCountryData.loc['United States']
+else:
+    dfCountryData = dfLoadGeoNamesData()
 
 # %%
-fDataVersion = 1
-if fDataVersion == 0:
-  dfCOVID = dfLoadFile1(pDataBase + pDataDaily + '03-22-2020.csv')
-  dfData = pd.merge(dfCOVID, dfCountryData, how='left', left_on='country', right_on='name')
+if vJHUData == 0:
+    dfCOVID = dfLoadCountriesStatJHUv1(pDataJHUBase + pDataJHUDaily + '03-22-2020.csv')
+    dfData = pd.merge(dfCOVID, dfCountryData, how='left', left_on='country', right_on='name')
 else:
-  dfCOVID = dfLoadFile2(pDataBase + pDataDaily + pDataFilename + '.csv')
-  #df = dfMerged.loc[dfMerged['country'].notna(), ['country', 'confirmed', 'recovered', 'deaths', 'population']]
-  dfData = dfCOVID.merge(dfCountryData, how='inner', left_index=True, right_on='name')
-
+    dfCOVID = dfLoadCountriesStatJHUv2(pDataJHUBase + pDataJHUDaily + pDataJHUFilename + '.csv')
+    #df = dfMerged.loc[dfMerged['country'].notna(), ['country', 'confirmed', 'recovered', 'deaths', 'population']]
+    if vCountryData == 0:
+        dfData = dfCOVID.merge(dfCountryData, how='inner', left_index=True, right_on='name')
+    else:
+        dfData = dfCOVID.merge(dfCountryData, how='inner', left_index=True, right_index=True)
 
 # %%
 dfData['prevalence'] = dfData['active'] / dfData['population'] * 100000
@@ -323,10 +361,12 @@ if fOptions['deathrate']:
 # formatter = mdates.ConciseDateFormatter(locator)
 
 if fOptions['tl_cases']:
-    # https://github.com/coviddata/covid-api
-    dftlCases = pd.read_csv('covid-api/docs/v1/countries/cases.csv', index_col=0)
+    dftlCases = dfLoadCasesTLCovAPIv1()
 
-    dftlCasesPop = dftlCases.merge(dfCountryData['population'], how='inner', left_index=True, right_on='name')
+    if vCountryData == 0:
+        dftlCasesPop = dftlCases.merge(dfCountryData['population'], how='inner', left_index=True, right_on='name')
+    else:
+        dftlCasesPop = dftlCases.merge(dfCountryData['population'], how='inner', left_index=True, right_index=True)
     dftlCasesPop = dftlCasesPop.apply(lambda data: data / dftlCasesPop['population'][data.index] * 100000)
     dftlCasesPop = dftlCasesPop.iloc[:,0:-1]
 

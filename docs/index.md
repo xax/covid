@@ -48,12 +48,21 @@ red          |  4%    |
 
 
 [^1]: Data sources:
-      - [2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by *Johns Hopkins CSSE*][JHUCSSE]
-      - [CovidData], preprocessed *[JHU CSSE][JHUCSSE]* and [*New York Times*][NYTData] data
-      - [Country information][CountryData1] by *lorey*, preprocessed [GeoNames] data
+      - [2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by *Johns Hopkins CSSE*][JHUCSSE][^3]
+      - [CovidData], preprocessed *[JHU CSSE][JHUCSSE]* and [*New York Times*][NYTData][^4] data
+      - [Country information][CountryDataGN][^2] by [GeoNames]
+
+[^2]: Licensed under a [Creative Commons Attribution 4.0 License][CC-by-4.0]
+[^3]: [Terms of Use][JHU-TOS]: Data, copyright 2020 Johns Hopkins University, all rights reserved, is provided to the public strictly for educational and academic research purposes.
+[^4]: [License and Attribution][NYT-TOS]: Data from *The New York Times*, based on reports from state and local health agencies.
 
 [JHUCSSE]: https://github.com/CSSEGISandData/COVID-19 "2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE"
 [CovidData]: https://github.com/coviddata/coviddata "CovidData, preprocessed JHU CSSE and New York Times data"
 [NYTData]: https://github.com/nytimes/covid-19-data "New York Times Covid-19 US states data"
-[CountryData1]: https://github.com/lorey/list-of-countries "GeoNames country data preprocessed by ”lorey“"
+
 [GeoNames]: http://www.geonames.org/ "GeoNames"
+[CountryDataGN]: https://download.geonames.org/export/dump/countryInfo.txt "GeoNames country data"
+
+[CC-by-4.0]: https://creativecommons.org/licenses/by/4.0/ "Creative Commons Attribution 4.0 License"
+[JHU-TOS]: https://github.com/CSSEGISandData/COVID-19/blob/master/README.md "Terms of use"
+[NYT-TOS]: https://github.com/nytimes/covid-19-data#license-and-attribution "License and Attribution"
