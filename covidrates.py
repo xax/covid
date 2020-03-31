@@ -105,14 +105,14 @@ if fAll:
 # %%
 def dfLoadGeoNamesData (fname='./countryInfo.txt'):
     # https://download.geonames.org/export/dump/countryInfo.txt
-    df = pd.read_csv('./countryInfo.txt',#fname,
-                       skiprows=51,
-                       skip_blank_lines=True,
-                       delimiter="\t",
-                       header=None,
-                       index_col='country',
-                       names=['ISO', 'ISO3', 'ISOn', 'fips', 'country', 'capital', 'area', 'population', 'continent', 'tld', 'currencyCode', 'currencyName', 'phone', 'postalCodeFmt', 'postalCodeRegEx', 'languages', 'geonameId', 'neighbors', 'fips_equiv']
-                       )
+    df = pd.read_csv(fname,
+                     skiprows=51,
+                     skip_blank_lines=True,
+                     delimiter="\t",
+                     header=None,
+                     index_col='country',
+                     names=['ISO', 'ISO3', 'ISOn', 'fips', 'country', 'capital', 'area', 'population', 'continent', 'tld', 'currencyCode', 'currencyName', 'phone', 'postalCodeFmt', 'postalCodeRegEx', 'languages', 'geonameId', 'neighbors', 'fips_equiv']
+                    )
     # [FIXES] patching database glitches
     df.at['Eritrea', 'population'] = 5750433 # https://en.wikipedia.org/wiki/Eritrea
     df.loc['US'] = df.loc['United States']
@@ -123,13 +123,15 @@ def dfLoadGeoNamesData (fname='./countryInfo.txt'):
 # %%
 def dfLoadCountriesDataStatJHUWDv2 (fname=pDataJHUWDBase+'cases_country.csv'):
     # https://raw.githubusercontent.com/CSSEGISandData/COVID-19/web-data/data/cases_country.csv
-    return pd.read_csv(fname,
-                       header=0,
-                       names=['country', 'upd', 'lat', 'lon', 'confirmed', 'deaths', 'recovered', 'active']
-                       ) \
-        .groupby('country').sum()
-    #dff = df.groupby('country').apply(lambda x: x.sum() if x.name != 'upd' or x.name != country else x)
-    #dff.loc['US']
+    df = pd.read_csv(pDataJHUWDBase+'cases_country.csv',#fname,
+                     header=0,
+                     index_col='country',
+                     names=['country', 'upd', 'lat', 'lon', 'confirmed', 'deaths', 'recovered', 'active']
+                    )
+    #Python 3.7+: tUpdate = df['upd'].apply(lambda x: pd.Timestamp.fromisoformat(x)).max()
+    tUpdate = df['upd'].apply(lambda x: datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S')).max()
+    # tUpdate.tz_localize('UTC')
+    return df, tUpdate.to_pydatetime()
 
 def dfLoadCasesTLCovAPIv1 (fname=pDataCovidDataBase+'docs/v1/countries/cases.csv'):
     # https://raw.githubusercontent.com/coviddata/coviddata/master/docs/v1/countries/cases.csv
@@ -168,7 +170,8 @@ dfCountryData = dfLoadGeoNamesData()
 
 
 # %%
-dfCOVID = dfLoadCountriesDataStatJHUWDv2()
+dfCOVID, pydtUpdate = dfLoadCountriesDataStatJHUWDv2()
+theDate = pydtUpdate.strftime('%Y-%m-%d')
 dfData = dfCOVID.merge(dfCountryData, how='inner', left_index=True, right_index=True)
 
 # %%
@@ -198,7 +201,7 @@ if fOptions['cases']:
     ax = dfA.head(20).plot.barh(stacked=True, logx=False,
                                 y=['active', 'recovered', 'deaths'],
                                 color=('xkcd:bright blue', 'xkcd:leaf green', 'xkcd:reddish gray'),
-                                title='Case numbers ('+theDate.isoformat()+')',
+                                title='Case numbers ('+theDate+')',
                                 figsize=(10,8))
     # %%
     ax.set_xlabel('capita')
@@ -220,7 +223,7 @@ if fOptions['prevalence']:
     ax = dfB.head(30).plot.barh(stacked=False, logx=False,
                                 y='prevalence',
                                 color='xkcd:bright blue',
-                                title='Prevalence ('+theDate.isoformat()+')',
+                                title='Prevalence ('+theDate+')',
                                 figsize=(10,8))
     # %%
     ax.set_xlabel('capita / 100000')
@@ -235,7 +238,7 @@ if fOptions['prevalence']:
     ax = dfB.head(30).plot.barh(stacked=False, logx=False,
                                 y='prevalence_agg',
                                 color='xkcd:bright blue',
-                                title='Prevalence::agregate ('+theDate.isoformat()+')',
+                                title='Prevalence::agregate ('+theDate+')',
                                 figsize=(10,8))
     # %%
     ax.set_xlabel('capita / 100000')
@@ -255,7 +258,7 @@ if fOptions['rates']:
       ax = dfC.head(30).plot.barh(stacked=False, logx=True,
                                   y='deathrate',
                                   color='xkcd:reddish gray',
-                                  title='Fatalities rate ('+theDate.isoformat()+')',
+                                  title='Fatalities rate ('+theDate+')',
                                   figsize=(10,8))
       ax.set_xlabel('capita / 100000')
       ax.set_ylabel('Country')
@@ -271,7 +274,7 @@ if fOptions['rates']:
       ax = dfC.head(30).plot.barh(stacked=False, logx=True,
                                   y='recoveredrate',
                                   color='xkcd:leaf green', #, 'xkcd:reddish gray'), #('xkcd:bright blue', 'xkcd:leaf green', 'xkcd:reddish gray'),
-                                  title='Recovered rate ('+theDate.isoformat()+')',
+                                  title='Recovered rate ('+theDate+')',
                                   figsize=(10,12))
       ax.set_xlabel('capita / 100000')
       ax.set_ylabel('Country')
@@ -288,7 +291,7 @@ if fOptions['rates']:
       ax = dfC.head(30).plot.barh(stacked=False, logx=True,
                                   y=['deathrate', 'recoveredrate'],
                                   color=('xkcd:reddish gray', 'xkcd:leaf green'),
-                                  title='Fatalities / Recovered rate ('+theDate.isoformat()+')',
+                                  title='Fatalities / Recovered rate ('+theDate+')',
                                   figsize=(10,10))
       ax.set_xlabel('capita / 100000')
       ax.set_ylabel('Country')
@@ -317,7 +320,7 @@ if fOptions['deathrate']:
                     y='deaths',
                     s=dfD['population'] / maxCases * 750,
                     logx=True, logy=True,
-                    title='Confirmed cases versus fatalities ('+theDate.isoformat()+')',
+                    title='Confirmed cases versus fatalities ('+theDate+')',
                     figsize=(13,8)
     )
 
@@ -387,7 +390,7 @@ if fOptions['tl_cases']:
     ax = df.plot.line(
                       logy=True,
                       marker='o',
-                      title='Confirmed cases per 100.000 capita (log-y) ('+theDate.isoformat()+')',
+                      title='Confirmed cases per 100.000 capita (log-y) ('+strDate+')',
                       figsize=(13,8)
                      )
 
