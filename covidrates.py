@@ -442,7 +442,7 @@ if fOptions['gr_cases']:
     for country in countries:
         dfCountry = pd.DataFrame(dftlCases.loc[:,country])
 
-        for d in (1, 4, 7, 14):
+        for d in (2, 4, 7, 14):
           dfCountry = dfCountry.join(
                     dftlCases.loc[:,country].rename("{:d} days".format(d)) \
                     .rolling(window=d+1, center=False) \
@@ -452,13 +452,13 @@ if fOptions['gr_cases']:
         ax = dfCountry.iloc[:,1:].plot.line(
                     logy=False,
                     marker='o',
-                    title='Confirmed cases, growth rate in {:s} ({:s}..{:s})'.format(country, strDateFirst, strDateLast),
+                    title='Confirmed cases, daily growth rate in {:s} ({:s}..{:s})'.format(country, strDateFirst, strDateLast),
                     #title='Confirmed cases, growth rate in '+country+' ('+strDateFirst+'..'+strDateLast+')',
                     figsize=(13,8)
                 )
         ax.minorticks_on()
         ax.grid(axis='both', which='both', linestyle=':', color='xkcd:light gray')
-        ax.set_ylabel('(avg) growth factor')
+        ax.set_ylabel('(backw avg) growth factor per day')
         ax.legend(title='Avg over $n$ days')
 
         if not fOptions['noshow']: plt.subplot(ax)
@@ -477,7 +477,7 @@ if fOptions['gr_cases']:
     for country in countries:
         dfCountry = pd.DataFrame(dftlCases.loc[:,country])
 
-        for d in (1, 4, 7, 14):
+        for d in (2, 4, 7, 14):
           dfCountry = dfCountry.join(
                     dftlCases.loc[:,country].rename("{:d} days".format(d)) \
                     .rolling(window=d+1, center=False) \
@@ -487,13 +487,13 @@ if fOptions['gr_cases']:
         ax = dfCountry.iloc[:,1:].plot.line(
                     logy=False,
                     marker='o',
-                    title='Fatalities, growth rate in {:s} ({:s}..{:s})'.format(country, strDateFirst, strDateLast),
+                    title='Fatalities, daily growth rate in {:s} ({:s}..{:s})'.format(country, strDateFirst, strDateLast),
                     #title='Confirmed cases, growth rate in '+country+' ('+strDateFirst+'..'+strDateLast+')',
                     figsize=(13,8)
                 )
         ax.minorticks_on()
         ax.grid(axis='both', which='both', linestyle=':', color='xkcd:light gray')
-        ax.set_ylabel('(avg) growth factor')
+        ax.set_ylabel('(backw avg) growth factor per day')
         ax.legend(title='Avg over $n$ days')
 
         if not fOptions['noshow']: plt.subplot(ax)

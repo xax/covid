@@ -9,15 +9,31 @@
 
 ### • [Account of active cases, recovered persons and fatalities][cases-pcap-absrel]
 
+---
+
+###
+![countrywise confirmed cases versus fatalities](./assets/images/cases-deaths-ll.svg)
+
+Death rate iso lines:
+
+color        | rate   | notes
+------------ | ------ | ------
+*light blue* |  0.1%  | Influenza A
+green        |  0.4%  |
+blue         |  1%    |
+*grey*       |  2.25% | Spanish Flue (1918)
+red          |  4%    |
+*purple*     |  11%   | SARS
+
+
+<sup><sub>Portions copyright © XA, III 2020. All rights reserved.</sub></sup>
+
+---
 
 
 [cases-pcap-absrel]: ./cases-pcap-absrel.md
 [tl-cases-rates]: ./tl-cases-rates.md
 [tl-cases-pcap-rel]: ./tl-cases-pcap-rel.md
-
-
-<sup><sub>Portions copyright © XA, III 2020. All rights reserved.</sub></sup>
-
 
 
 [^1]: Data sources:
