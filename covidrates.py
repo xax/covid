@@ -20,7 +20,11 @@ cCopyright = 'Copyright (C) by XA, III - IV 2020. All rights reserved.'
 # %%
 import matplotlib as mpl
 # Use MPLBACKEND=TkAgg
-from matplotlib import pyplot as plt
+try:
+    from matplotlib import pyplot as plt
+except:
+    mpl.use('Agg')
+    from matplotlib import pyplot as plt
 import matplotlib.dates as mdates
 import numpy as np
 import pandas as pd
@@ -46,7 +50,7 @@ def usage ():
 {cCopyright}
 
 + Usage:
-    {cName} {{ -h | -a | -cprCd }}
+    {cName} {{ -h | -a | -[cprCdg] }}
 
     -a      -- show all graphics
 
@@ -55,6 +59,8 @@ def usage ():
     -r      -- rates diagrams
     -C      -- cases timeline
     -d      -- fatalities v cases
+
+    -g      -- growth rates of confirmed cases
 """)
     pass
 
@@ -66,11 +72,12 @@ fOptions = {
         'rates': False,
         'tl_cases': False,
         'deathrate': False,
+        'gr_cases': False,
         'dummy': False
         }
 
 try:
-    optlist, args = getopt.gnu_getopt(sys.argv[1:], 'hacprCd')
+    optlist, args = getopt.gnu_getopt(sys.argv[1:], 'hacprCdg')
 except getopt.GetoptError as err:
     print(err)
     usage()
@@ -92,10 +99,13 @@ for o, a in optlist:
         fOptions['tl_cases'] = True
     elif o == '-d':
         fOptions['deathrate'] = True
+    elif o == '-g':
+        fOptions['gr_cases'] = True
 
 if fAll:
     for k in fOptions.keys():
         fOptions[k] = True
+    fOptions['gr_cases'] = False # FIXME
 
 
 # %%
@@ -159,6 +169,9 @@ def axRotateLabels (ax):
 #                     textcoords="offset points",
 #                     ha='left', va='center')
 
+
+def filenamify (name):
+    return name.replace(' ', '_').replace('/', '_').replace('\\', '_').replace('%', '_').replace(':', '_')
 
 
 # %%
@@ -413,5 +426,80 @@ if fOptions['tl_cases']:
 
 
 
+# ############################################################################
+
+if fOptions['gr_cases']:
+    dftlCases = dfLoadCasesTLCovAPIv1()
+    strDateFirst = dftlCases.iloc[:,0].name
+    strDateLast = dftlCases.iloc[:,-1].name
+    dftlCases = dftlCases.loc[['Belgium','Germany','Switzerland','France','Italy','Spain','Japan','South Korea','China','United States']].T
+
+    #plt.subplots(6, 1)
+    countries = ('Germany','Belgium','Switzerland','Italy','Spain','China','United States')
+    print(dftlCases.loc[:,'Germany'])
+
+    for country in countries:
+        dfCountry = pd.DataFrame(dftlCases.loc[:,country])
+
+        for d in (1, 4, 7, 14):
+          dfCountry = dfCountry.join(
+                    dftlCases.loc[:,country].rename("{:d} days".format(d)) \
+                    .rolling(window=d+1, center=False) \
+                    .apply(lambda v: (v[d]/v[0])**(1./d), raw=True)
+                )
+
+        ax = dfCountry.iloc[:,1:].plot.line(
+                    logy=False,
+                    marker='o',
+                    title='Confirmed cases, growth rate in {:s} ({:s}..{:s})'.format(country, strDateFirst, strDateLast),
+                    #title='Confirmed cases, growth rate in '+country+' ('+strDateFirst+'..'+strDateLast+')',
+                    figsize=(13,8)
+                )
+        ax.minorticks_on()
+        ax.grid(axis='both', which='both', linestyle=':', color='xkcd:light gray')
+        ax.set_ylabel('(avg) growth factor')
+        ax.legend(title='Avg over $n$ days')
+
+        #plt.subplot(ax)
+        plt.savefig(pImagesBase + 'tl-rates-confirmed-{:s}.svg'.format(filenamify(country)), format='svg')
+
+    # ##
+
+    dftlCases = dfLoadCasesTLCovAPIv1(pDataCovidDataBase+'docs/v1/countries/deaths.csv')
+    strDateFirst = dftlCases.iloc[:,0].name
+    strDateLast = dftlCases.iloc[:,-1].name
+    dftlCases = dftlCases.loc[['Belgium','Germany','Switzerland','France','Italy','Spain','Japan','South Korea','China','United States']].T
+
+    #plt.subplots(6, 1)
+    countries = ('Germany','Belgium','Switzerland','Italy','Spain','China','United States')
+
+    for country in countries:
+        dfCountry = pd.DataFrame(dftlCases.loc[:,country])
+
+        for d in (1, 4, 7, 14):
+          dfCountry = dfCountry.join(
+                    dftlCases.loc[:,country].rename("{:d} days".format(d)) \
+                    .rolling(window=d+1, center=False) \
+                    .apply(lambda v: (v[d]/v[0])**(1./d), raw=True)
+                )
+
+        ax = dfCountry.iloc[:,1:].plot.line(
+                    logy=False,
+                    marker='o',
+                    title='Confirmed cases, growth rate in {:s} ({:s}..{:s})'.format(country, strDateFirst, strDateLast),
+                    #title='Confirmed cases, growth rate in '+country+' ('+strDateFirst+'..'+strDateLast+')',
+                    figsize=(13,8)
+                )
+        ax.minorticks_on()
+        ax.grid(axis='both', which='both', linestyle=':', color='xkcd:light gray')
+        ax.set_ylabel('(avg) growth factor')
+        ax.legend(title='Avg over $n$ days')
+
+        #plt.subplot(ax)
+        plt.savefig(pImagesBase + 'tl-rates-deaths-{:s}.svg'.format(filenamify(country)), format='svg')
+
+
+
+#plt.subplots()
 
 plt.show()
