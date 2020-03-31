@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 cName = 'covidrates'
-cVersion = '1.5.0'
-cCopyright = 'Copyright (C) by XA, III 2020. All rights reserved.'
+cVersion = '2.0.0'
+cCopyright = 'Copyright (C) by XA, III - IV 2020. All rights reserved.'
 #
 # * How to set it up:
 #
@@ -30,14 +30,10 @@ import getopt
 import datetime
 
 # %%
-theDate = datetime.date(2020, 3, 30)
-#
-
 pDataJHUData = './COVID-19/'
 pDataJHUWDBase = pDataJHUData + '/data/'
 pDataJHUBase = pDataJHUData + '/csse_covid_19_data/'
 pDataJHUDaily = 'csse_covid_19_daily_reports/'
-pDataJHUFilename = theDate.strftime('%m-%d-%Y')
 
 pDataCovidDataBase = './coviddata/'
 
