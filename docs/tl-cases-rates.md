@@ -11,7 +11,6 @@
 - [China](tl-cases-rates-China.md)
 - [United States](tl-cases-rates-United_States.md)
 
-'Germany','Belgium','Italy','Spain','China','United States')
 
 <sup><sub>Portions copyright © XA, III-IV 2020. All rights reserved.</sub></sup>
 
