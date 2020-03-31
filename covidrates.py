@@ -30,7 +30,7 @@ import getopt
 import datetime
 
 # %%
-theDate = datetime.date(2020, 3, 29)
+theDate = datetime.date(2020, 3, 30)
 #
 
 pDataJHUData = './COVID-19/'
@@ -128,7 +128,8 @@ def dfLoadCountriesDataStatJHUWDv2 (fname=pDataJHUWDBase+'cases_country.csv'):
                        names=['country', 'upd', 'lat', 'lon', 'confirmed', 'deaths', 'recovered', 'active']
                        ) \
         .groupby('country').sum()
-
+    #dff = df.groupby('country').apply(lambda x: x.sum() if x.name != 'upd' or x.name != country else x)
+    #dff.loc['US']
 
 def dfLoadCasesTLCovAPIv1 (fname=pDataCovidDataBase+'docs/v1/countries/cases.csv'):
     # https://raw.githubusercontent.com/coviddata/coviddata/master/docs/v1/countries/cases.csv
@@ -357,6 +358,7 @@ if fOptions['deathrate']:
 
 if fOptions['tl_cases']:
     dftlCases = dfLoadCasesTLCovAPIv1()
+    strDate = dftlCases.iloc[:,-1].name
 
     dftlCasesPop = dftlCases.merge(dfCountryData['population'], how='inner', left_index=True, right_index=True)
     dftlCasesPop = dftlCasesPop.apply(lambda data: data / dftlCasesPop['population'][data.index] * 100000)
@@ -367,7 +369,7 @@ if fOptions['tl_cases']:
     ax = df.plot.line(
                       logy=False,
                       marker='o',
-                      title='Confirmed cases per 100.000 capita ('+theDate.isoformat()+')',
+                      title='Confirmed cases per 100.000 capita ('+strDate+')',
                       figsize=(13,8)
                      )
 
