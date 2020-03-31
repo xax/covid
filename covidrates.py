@@ -50,9 +50,10 @@ def usage ():
 {cCopyright}
 
 + Usage:
-    {cName} {{ -h | -a | -[cprCdg] }}
+    {cName} {{ -h | -[aX] | -[cprCdg] }}
 
     -a      -- show all graphics
+    -X      -- create, but don't show
 
     -c      -- cases diagram
     -p      -- prevalence diagrams
@@ -73,11 +74,11 @@ fOptions = {
         'tl_cases': False,
         'deathrate': False,
         'gr_cases': False,
-        'dummy': False
+        'noshow': False
         }
 
 try:
-    optlist, args = getopt.gnu_getopt(sys.argv[1:], 'hacprCdg')
+    optlist, args = getopt.gnu_getopt(sys.argv[1:], 'haXcprCdg')
 except getopt.GetoptError as err:
     print(err)
     usage()
@@ -89,6 +90,8 @@ for o, a in optlist:
         sys.exit(2)
     elif o == '-a':
         fAll = True
+    elif o == '-X':
+        fOptions['noshow'] = True
     elif o == '-c':
         fOptions['cases'] = True
     elif o == '-p':
@@ -103,9 +106,11 @@ for o, a in optlist:
         fOptions['gr_cases'] = True
 
 if fAll:
+    fTmp = fOptions['noshow']
     for k in fOptions.keys():
         fOptions[k] = True
-    fOptions['gr_cases'] = False # FIXME
+    fOptions['noshow'] = fTmp
+
 
 
 # %%
@@ -216,8 +221,7 @@ if fOptions['cases']:
     ax.set_xlabel('capita')
     ax.set_ylabel('Country')
 
-    #plt.show()
-    plt.subplot(ax)
+    if not fOptions['noshow']: plt.subplot(ax)
     plt.savefig(pImagesBase + 'cases.svg', format='svg')
 
 
@@ -253,7 +257,7 @@ if fOptions['prevalence']:
     ax.set_xlabel('capita / 100000')
     ax.set_ylabel('Country')
 
-    plt.subplot(ax)
+    if not fOptions['noshow']: plt.subplot(ax)
     plt.savefig(pImagesBase + 'preval-agg-r.svg', format='svg')
 
 
@@ -272,8 +276,7 @@ if fOptions['rates']:
       ax.set_xlabel('capita / 100000')
       ax.set_ylabel('Country')
 
-      #plt.show()
-      plt.subplot(ax)
+      if not fOptions['noshow']: plt.subplot(ax)
       plt.savefig(pImagesBase + 'deaths-rl.svg', format='svg')
 
 
@@ -288,8 +291,7 @@ if fOptions['rates']:
       ax.set_xlabel('capita / 100000')
       ax.set_ylabel('Country')
 
-      #plt.show()
-      plt.subplot(ax)
+      if not fOptions['noshow']: plt.subplot(ax)
       plt.savefig(pImagesBase + 'recov-rl.svg', format='svg')
 
     else:
@@ -306,7 +308,7 @@ if fOptions['rates']:
       ax.set_ylabel('Country')
 
       #plt.show()
-      plt.subplot(ax)
+      if not fOptions['noshow']: plt.subplot(ax)
       plt.savefig(pImagesBase + 'deaths-recov-rl.svg', format='svg')
 
 
@@ -357,7 +359,7 @@ if fOptions['deathrate']:
 
 
     # %%
-    plt.subplot(ax)
+    if not fOptions['noshow']: plt.subplot(ax)
     plt.savefig(pImagesBase + 'cases-deaths-ll.svg', format='svg')
 
 
@@ -393,7 +395,7 @@ if fOptions['tl_cases']:
     ax.legend(title='Countries')
     ax.set_ylabel('cases · population${}^{-1}$ · 100000')
 
-    plt.subplot(ax)
+    if not fOptions['noshow']: plt.subplot(ax)
     plt.savefig(pImagesBase + 'tl-cases-r.svg', format='svg')
 
     ax = df.plot.line(
@@ -421,7 +423,7 @@ if fOptions['tl_cases']:
     ax.set_ylabel('cases · population${}^{-1}$ · 100000')
 
     # %%
-    plt.subplot(ax)
+    if not fOptions['noshow']: plt.subplot(ax)
     plt.savefig(pImagesBase + 'tl-cases-rl.svg', format='svg')
 
 
@@ -436,7 +438,6 @@ if fOptions['gr_cases']:
 
     #plt.subplots(6, 1)
     countries = ('Germany','Belgium','Switzerland','Italy','Spain','China','United States')
-    print(dftlCases.loc[:,'Germany'])
 
     for country in countries:
         dfCountry = pd.DataFrame(dftlCases.loc[:,country])
@@ -460,7 +461,7 @@ if fOptions['gr_cases']:
         ax.set_ylabel('(avg) growth factor')
         ax.legend(title='Avg over $n$ days')
 
-        #plt.subplot(ax)
+        if not fOptions['noshow']: plt.subplot(ax)
         plt.savefig(pImagesBase + 'tl-rates-confirmed-{:s}.svg'.format(filenamify(country)), format='svg')
 
     # ##
@@ -486,7 +487,7 @@ if fOptions['gr_cases']:
         ax = dfCountry.iloc[:,1:].plot.line(
                     logy=False,
                     marker='o',
-                    title='Confirmed cases, growth rate in {:s} ({:s}..{:s})'.format(country, strDateFirst, strDateLast),
+                    title='Fatalities, growth rate in {:s} ({:s}..{:s})'.format(country, strDateFirst, strDateLast),
                     #title='Confirmed cases, growth rate in '+country+' ('+strDateFirst+'..'+strDateLast+')',
                     figsize=(13,8)
                 )
@@ -495,11 +496,11 @@ if fOptions['gr_cases']:
         ax.set_ylabel('(avg) growth factor')
         ax.legend(title='Avg over $n$ days')
 
-        #plt.subplot(ax)
+        if not fOptions['noshow']: plt.subplot(ax)
         plt.savefig(pImagesBase + 'tl-rates-deaths-{:s}.svg'.format(filenamify(country)), format='svg')
 
 
 
 #plt.subplots()
 
-plt.show()
+if not fOptions['noshow']: plt.show()
