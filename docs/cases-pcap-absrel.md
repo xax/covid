@@ -1,4 +1,5 @@
 ## COVID-19 data[^1]
+<sub><sup>[*←back*][main]</sup></sub>
 
 
 ### Confirmed cases versus fatalities
