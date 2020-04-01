@@ -9,9 +9,10 @@
 
 ### • [Account of active cases, recovered persons and fatalities][cases-pcap-absrel]
 
+
 ---
 
-###
+
 ![countrywise confirmed cases versus fatalities](./assets/images/cases-deaths-ll.svg)
 
 Death rate iso lines:
