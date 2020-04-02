@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 cName = 'covidrates'
-cVersion = '2.0.0'
+cVersion = '2.1.0'
 cCopyright = 'Copyright (C) by XA, III - IV 2020. All rights reserved.'
 #
 # * How to set it up:
@@ -446,7 +446,8 @@ if fOptions['gr_cases']:
           dfCountry = dfCountry.join(
                     dftlCases.loc[:,country].rename("{:d} days".format(d)) \
                     .rolling(window=d+1, center=False) \
-                    .apply(lambda v: (v[d]/v[0])**(1./d), raw=True)
+                    #.apply(lambda v: (v[d]/v[0])**(1./d), raw=True)
+                    .apply(lambda v: ((v[d]/v[0])**(1./d)-1)*100, raw=True) # percent
                 )
 
         ax = dfCountry.iloc[:,1:].plot.line(
@@ -458,7 +459,7 @@ if fOptions['gr_cases']:
                 )
         ax.minorticks_on()
         ax.grid(axis='both', which='both', linestyle=':', color='xkcd:light gray')
-        ax.set_ylabel('(backw avg) growth factor per day')
+        fo.ax.set_ylabel('(backw avg) growth in percent per day')
         ax.legend(title='Avg over $n$ days')
 
         if not fOptions['noshow']: plt.subplot(ax)
@@ -482,7 +483,8 @@ if fOptions['gr_cases']:
           dfCountry = dfCountry.join(
                     dftlCases.loc[:,country].rename("{:d} days".format(d)) \
                     .rolling(window=d+1, center=False) \
-                    .apply(lambda v: (v[d]/v[0])**(1./d), raw=True)
+                    #.apply(lambda v: (v[d]/v[0])**(1./d), raw=True)
+                    .apply(lambda v: ((v[d]/v[0])**(1./d)-1)*100, raw=True) # percent
                 )
 
         ax = dfCountry.iloc[:,1:].plot.line(
@@ -494,7 +496,7 @@ if fOptions['gr_cases']:
                 )
         ax.minorticks_on()
         ax.grid(axis='both', which='both', linestyle=':', color='xkcd:light gray')
-        ax.set_ylabel('(backw avg) growth factor per day')
+        fo.ax.set_ylabel('(backw avg) growth in percent per day')
         ax.legend(title='Avg over $n$ days')
 
         if not fOptions['noshow']: plt.subplot(ax)
