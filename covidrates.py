@@ -464,6 +464,7 @@ if fOptions['gr_cases']:
         if not fOptions['noshow']: plt.subplot(ax)
         plt.savefig(pImagesBase + 'tl-rates-confirmed-{:s}.svg'.format(filenamify(country)), format='svg')
 
+
     # ##
 
     dftlCases = dfLoadCasesTLCovAPIv1(pDataCovidDataBase+'docs/v1/countries/deaths.csv')
