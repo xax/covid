@@ -307,7 +307,6 @@ if fOptions['rates']:
       ax.set_xlabel('capita / 100000')
       ax.set_ylabel('Country')
 
-      #plt.show()
       if not fOptions['noshow']: plt.subplot(ax)
       plt.savefig(pImagesBase + 'deaths-recov-rl.svg', format='svg')
 
@@ -318,6 +317,7 @@ if fOptions['rates']:
 # %%
 
 
+if not fOptions['noshow']: plt.show()
 
 
 # ############################################################################
