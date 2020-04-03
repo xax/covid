@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 cName = 'covid2xa'
-cVersion = '4.0.0'
+cVersion = '4.0.2'
 cCopyright = 'Copyright (C) by XA, III - IV 2020. All rights reserved.'
 #
 # * How to set it up:
@@ -18,15 +18,6 @@ cCopyright = 'Copyright (C) by XA, III - IV 2020. All rights reserved.'
 #    $ python3 ./covidrates.py -h
 #
 # %%
-import matplotlib as mpl
-# Use MPLBACKEND=TkAgg
-try:
-    from matplotlib import pyplot as plt
-except:
-    mpl.use('Agg')
-    from matplotlib import pyplot as plt
-import matplotlib.dates as mdates
-
 import numpy as np
 import pandas as pd
 
@@ -126,6 +117,19 @@ def parseOptions (fOptions):
 
 parseOptions(fOptions)
 
+# %%
+import matplotlib as mpl
+import matplotlib.dates as mdates
+# Use MPLBACKEND=TkAgg
+if fOptions['noshow']:
+      mpl.use('Agg')
+      from matplotlib import pyplot as plt
+else:
+  try:
+      from matplotlib import pyplot as plt
+  except:
+      mpl.use('Agg')
+      from matplotlib import pyplot as plt
 
 
 # %%
@@ -346,7 +350,7 @@ if fOptions['prevalence']:
              color='xkcd:bright blue',
              title='Prevalence::agregate ('+theDate+')',
              figsize=(10,8))
-    # %%
+
     fo.ax.set_xlabel('capita / 100000')
     fo.ax.set_ylabel('Country')
 
@@ -359,14 +363,20 @@ if fOptions['rates']:
      # combined death & recovery rate
 
     dfC = dfData.sort_values(by='deathrate', ascending=False)
+    dfC = dfC.head(30)
+    # [FIXES] force appearance of China
+    if not dfC.index.isin(['China']).any(): dfC = dfC.append(dfData.loc['China',:])
+    # [/FIXES]
+
     # %%
     fo = FigureObj()
-    dfC.head(30).plot(ax=fo.ax, kind='barh',
-                      stacked=False, logx=True,
-                      y=['deathrate', 'recoveredrate'],
-                      color=('xkcd:reddish gray', 'xkcd:leaf green'),
-                      title='Fatalities / Recovered rate ('+theDate+')',
-                      figsize=(10,10))
+    dfC.plot(ax=fo.ax, kind='barh',
+             stacked=False, logx=True,
+             y=['deathrate', 'recoveredrate'],
+             color=('xkcd:reddish gray', 'xkcd:leaf green'),
+             title='Fatalities / Recovered rate ('+theDate+')',
+             figsize=(10,10))
+
     fo.ax.set_xlabel('capita / 100000')
     fo.ax.set_ylabel('Country')
 
@@ -506,12 +516,12 @@ if fOptions['gr_cases']:
     dftlCases = dfLoadCasesTLCovAPIv1()
     strDateFirst = dftlCases.iloc[:,0].name
     strDateLast = dftlCases.iloc[:,-1].name
-    countriesPreselect = ['Belgium','Germany','Switzerland','France','Italy','Spain','Japan','South Korea','China','United States']
+    countriesPreselect = ['Belgium','Germany','Switzerland','France','Italy','Spain','Sweden','Japan','South Korea','China','United States']
 
     dftlCases = provideTLPerCountry(dftlCases, countriesPreselect)
 
     #plt.subplots(6, 1)
-    countries = ('Germany','Belgium','Switzerland','Italy','Spain','China','United States')
+    countries = ('Germany','Belgium','Switzerland','Italy','Spain','Sweden','China','United States')
 
     for country in countries:
         dfCountry = pd.DataFrame(dftlCases.loc[:,country])
@@ -547,7 +557,7 @@ if fOptions['gr_cases']:
     dftlCases = provideTLPerCountry(dftlCases, countriesPreselect)
 
     #plt.subplots(6, 1)
-    countries = ('Germany','Belgium','Switzerland','Italy','Spain','China','United States')
+    countries = ('Germany','Belgium','Switzerland','Italy','Spain','Sweden','China','United States')
 
     for country in countries:
         dfCountry = pd.DataFrame(dftlCases.loc[:,country])
