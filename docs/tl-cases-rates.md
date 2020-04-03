@@ -8,6 +8,7 @@
 - [Switzerland](tl-cases-rates-Switzerland.md)
 - [Italy](tl-cases-rates-Italy.md)
 - [Spain](tl-cases-rates-Spain.md)
+- [Sweden](tl-cases-rates-Sweden.md)
 - [China](tl-cases-rates-China.md)
 - [United States](tl-cases-rates-United_States.md)
 
