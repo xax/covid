@@ -179,8 +179,8 @@ def provideLocPerData (dfCOVID, dfCountryData):
     df = dfCOVID.merge(dfCountryData, how='inner', left_index=True, right_index=True)
     # [FIXES] patching database glitches
     df.at['US', 'active'] = df.at['US', 'confirmed'] - df.at['US', 'recovered'] - df.at['US', 'deaths']
-    #df.at['United States', 'active'] = df.at['US', 'active']
-    #[/FIXES]
+    # df.at['United States', 'active'] = df.at['US', 'active']
+    # [/FIXES]
     return df
 
 
@@ -285,14 +285,18 @@ if fOptions['cases']:
         dfA = dfData.sort_values(by=['confirmed'], ascending=False)
     else:
         dfA = dfData.sort_values(by=['active'], ascending=False)
+    dfA = dfA.head(20)
+    # [FIXES] force appearance of China
+    if not dfA.index.isin(['China']).any(): dfA = dfA.append(dfData.loc['China',:])
+    # [/FIXES]
 
     fo = FigureObj()
 
-    dfA.head(20).plot(ax=fo.ax, kind='barh', stacked=True, logx=False,
-                                y=['active', 'recovered', 'deaths'],
-                                color=('xkcd:bright blue', 'xkcd:leaf green', 'xkcd:reddish gray'),
-                                title='Case numbers ('+theDate+')',
-                                figsize=(10,8))
+    dfA.plot(ax=fo.ax, kind='barh', stacked=True, logx=False,
+             y=['active', 'recovered', 'deaths'],
+             color=('xkcd:bright blue', 'xkcd:leaf green', 'xkcd:reddish gray'),
+             title='Case numbers ('+theDate+')',
+             figsize=(10,8))
 
     # %%
     fo.ax.set_xlabel('capita')
@@ -308,15 +312,20 @@ if fOptions['cases']:
 
 if fOptions['prevalence']:
 
-    dfB = dfData.sort_values(by='prevalence', ascending=False)
-
     # fo = FigureObj(2, 1) # fo.ax[0]… fo.ax[1]…
+
+    dfB = dfData.sort_values(by='prevalence', ascending=False)
+    dfB = dfB.head(30)
+    # [FIXES] force appearance of China
+    # if not dfB.index.isin(['China']).any(): dfB = dfB.append(dfData.loc['China',:])
+    # [/FIXES]
+
     fo = FigureObj()
-    dfB.head(30).plot(ax=fo.ax, kind='barh', stacked=False, logx=False,
-                      y='prevalence',
-                      color='xkcd:bright blue',
-                      title='Prevalence ('+theDate+')',
-                      figsize=(10,8))
+    dfB.plot(ax=fo.ax, kind='barh', stacked=False, logx=False,
+             y='prevalence',
+             color='xkcd:bright blue',
+             title='Prevalence ('+theDate+')',
+             figsize=(10,8))
     # %%
     fo.ax.set_xlabel('capita / 100000')
     fo.ax.set_ylabel('Country')
@@ -325,14 +334,18 @@ if fOptions['prevalence']:
 
 
     # %%
-    fo = FigureObj()
     dfB = dfData.sort_values(by='prevalence_agg', ascending=False)
+    dfB = dfB.head(30)
+    # [FIXES] force appearance of China
+    if not dfB.index.isin(['China']).any(): dfB = dfB.append(dfData.loc['China',:])
+    # [/FIXES]
 
-    dfB.head(30).plot(ax=fo.ax, kind='barh', stacked=False, logx=False,
-                      y='prevalence_agg',
-                      color='xkcd:bright blue',
-                      title='Prevalence::agregate ('+theDate+')',
-                      figsize=(10,8))
+    fo = FigureObj()
+    dfB.plot(ax=fo.ax, kind='barh', stacked=False, logx=False,
+             y='prevalence_agg',
+             color='xkcd:bright blue',
+             title='Prevalence::agregate ('+theDate+')',
+             figsize=(10,8))
     # %%
     fo.ax.set_xlabel('capita / 100000')
     fo.ax.set_ylabel('Country')
@@ -436,6 +449,16 @@ if fOptions['tl_cases']:
             title='Confirmed cases per 100.000 capita ('+strDate+')',
             figsize=(13,8)
            )
+
+    X = df.index
+    Y = np.linspace(0, df.index.size-1, num=df.index.size)
+    # c = df.loc[df.index.min()].max()
+    c = df.loc[df.index.min()]['South Korea']
+
+    fo.ax.set_ylim(ymax=(df.max().max() // 50 + 1) * 50)
+    fo.ax.plot(X, c * 2**(Y/10), linestyle=':', color='xkcd:sky blue')
+    fo.ax.plot(X, c * 2**(Y/4), linestyle=':', color='xkcd:light red')
+    fo.ax.plot(X, c * 2**(Y/2), linestyle=':', color='xkcd:reddish gray')
 
     # fo.ax.xaxis.set_major_locator(locator)
     # fo.ax.xaxis.set_major_formatter(formatter)
