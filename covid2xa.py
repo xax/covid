@@ -559,6 +559,7 @@ if fTasks['gr_cases']:
                     #title='Confirmed cases, growth rate in '+country+' ('+strDateFirst+'..'+strDateLast+')',
                     figsize=(13,8)
                 )
+        fo.ax.set_ylim(ymax=60)
         fo.ax.minorticks_on()
         fo.ax.grid(axis='both', which='both', linestyle=':', color='xkcd:light gray')
         fo.ax.set_ylabel('(backw avg) growth in percent per day')
@@ -595,6 +596,7 @@ if fTasks['gr_cases']:
                     #title='Confirmed cases, growth rate in '+country+' ('+strDateFirst+'..'+strDateLast+')',
                     figsize=(13,8)
                 )
+        fo.ax.set_ylim(ymax=60)
         fo.ax.minorticks_on()
         fo.ax.grid(axis='both', which='both', linestyle=':', color='xkcd:light gray')
         fo.ax.set_ylabel('(backw avg) growth in percent per day')
