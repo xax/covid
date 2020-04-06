@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 cName = 'covid2xa'
-cVersion = '4.0.2'
+cVersion = '4.2.0'
 cCopyright = 'Copyright (C) by XA, III - IV 2020. All rights reserved.'
 #
 # * How to set it up:
@@ -30,6 +30,7 @@ import datetime
 # %%
 class rcConfig:
     """ Configuration data static. """
+
     def __init__ (self): raise Exception("This class is static only!")
 
     pDataJHUData = './COVID-19/'
@@ -65,18 +66,21 @@ def usage ():
     pass
 
 
-fOptions = {
+fTasks = {
         'cases': False,
         'prevalence': False,
         'rates': False,
         'tl_cases': False,
         'deathrate': False,
         'gr_cases': False,
+        }
+fOptions = {
+        'all': False,
         'noshow': False
         }
 
 
-def parseOptions (fOptions):
+def parseOptions (fOptions, fTasks):
     try:
         optlist, args = getopt.gnu_getopt(sys.argv[1:], 'haXcprCdg')
     except getopt.GetoptError as err:
@@ -91,31 +95,30 @@ def parseOptions (fOptions):
             sys.exit(2)
         elif o == '-a':
             fAll = True
+            fOptions['all'] = True
         elif o == '-X':
             fOptions['noshow'] = True
         elif o == '-c':
-            fOptions['cases'] = True
+            fTasks['cases'] = True
         elif o == '-p':
-            fOptions['prevalence'] = True
+            fTasks['prevalence'] = True
         elif o == '-r':
-            fOptions['rates'] = True
+            fTasks['rates'] = True
         elif o == '-C':
-            fOptions['tl_cases'] = True
+            fTasks['tl_cases'] = True
         elif o == '-d':
-            fOptions['deathrate'] = True
+            fTasks['deathrate'] = True
         elif o == '-g':
-            fOptions['gr_cases'] = True
+            fTasks['gr_cases'] = True
 
     if fAll:
-        fTmp = fOptions['noshow']
-        for k in fOptions.keys():
-            fOptions[k] = True
-        fOptions['noshow'] = fTmp
+        for k in fTasks.keys():
+            fTasks[k] = True
 
-    return fOptions
+    return fOptions, fTasks
 
+parseOptions(fOptions, fTasks)
 
-parseOptions(fOptions)
 
 # %%
 import matplotlib as mpl
@@ -198,11 +201,24 @@ class FigureObj(object):
     __slots__ = ['_fig', '_ax']
 
     def __init__ (self, nRows=1, nCols=1, **kwargs):
-        self._fig, self._ax = plt.subplots(nRows, nCols, **kwargs)
+        if fOptions['noshow']:
+            self._fig = mpl.figure.Figure()
+            self._ax = self._fig.subplots(nRows, nCols, **kwargs)
+            # for i in range(1, nRows*nCols+1):
+            #     self._fig.add_subplot(nRows, nCols, i)
+            # self._ax = np.array(self._fig.axes) if nRows*nCols > 1 else self._fig.axes[0]
+        else:
+            self._fig, self._ax = plt.subplots(nRows, nCols, **kwargs)
 
     def __del__ (self):
+        # if fOptions['noshow']:
+        #     pass
+        # else:
+        #     pass
         #self._fig.clear()
-        #print('OBJ DEL')
+        # DBG: print('OBJ DEL', self)
+        del self._ax
+        del self._fig
         self._ax = None
         self._fig = None
 
@@ -235,10 +251,11 @@ class FigureObj(object):
         if fName is not None:
             if pBase is None: pBase = rcConfig.pImagesBase
             self._fig.savefig(pBase + __class__._sanitizeFName(fName), format=format)
-        if noshow is None: noshow = fOptions['noshow']
-        if not noshow:
-            plt.subplot(self._fig.gca())
-            #self._fig.clear()
+        if fOptions['noshow']:
+            pass
+        else:
+            if noshow is not True:
+                plt.subplot(self._fig.gca())
 
 
 
@@ -283,7 +300,7 @@ dfData['recoveredrate'] = dfData['recovered'] / dfData['population'] * 100000
 
 # %%
 # ########################################################################
-if fOptions['cases']:
+if fTasks['cases']:
 
     if False:
         dfA = dfData.sort_values(by=['confirmed'], ascending=False)
@@ -314,7 +331,7 @@ if fOptions['cases']:
 # %%
 # ########################################################################
 
-if fOptions['prevalence']:
+if fTasks['prevalence']:
 
     # fo = FigureObj(2, 1) # fo.ax[0]… fo.ax[1]…
 
@@ -358,7 +375,7 @@ if fOptions['prevalence']:
 
 
 # %%
-if fOptions['rates']:
+if fTasks['rates']:
 
      # combined death & recovery rate
 
@@ -393,7 +410,7 @@ if fOptions['rates']:
 
 # ############################################################################
 
-if fOptions['deathrate']:
+if fTasks['deathrate']:
 
     dfD = dfData[dfData.notna()['confirmed']]
     maxCases = dfD['population'].max()
@@ -442,7 +459,7 @@ if fOptions['deathrate']:
 # locator = mdates.AutoDateLocator(minticks=7)
 # formatter = mdates.ConciseDateFormatter(locator)
 
-if fOptions['tl_cases']:
+if fTasks['tl_cases']:
     dftlCases = dfLoadCasesTLCovAPIv1()
     strDate = dftlCases.iloc[:,-1].name
 
@@ -512,7 +529,7 @@ if fOptions['tl_cases']:
 
 # ############################################################################
 
-if fOptions['gr_cases']:
+if fTasks['gr_cases']:
     dftlCases = dfLoadCasesTLCovAPIv1()
     strDateFirst = dftlCases.iloc[:,0].name
     strDateLast = dftlCases.iloc[:,-1].name
