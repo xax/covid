@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 cName = 'covid2xa'
-cVersion = '4.2.1'
+cVersion = '4.2.2'
 cCopyright = 'Copyright (C) by XA, III - IV 2020. All rights reserved.'
 #
 # * How to set it up:
@@ -551,7 +551,7 @@ if fTasks['gr_cases']:
                     #title='Confirmed cases, growth rate in '+country+' ('+strDateFirst+'..'+strDateLast+')',
                     figsize=(13,8)
                 )
-        fo.ax.set_ylim(ymax=60)
+        fo.ax.set_ylim(ymin=0, ymax=60)
         fo.ax.minorticks_on()
         fo.ax.grid(axis='both', which='both', linestyle=':', color='xkcd:light gray')
         fo.ax.set_ylabel('(backw avg) growth in percent per day')
@@ -588,7 +588,7 @@ if fTasks['gr_cases']:
                     #title='Confirmed cases, growth rate in '+country+' ('+strDateFirst+'..'+strDateLast+')',
                     figsize=(13,8)
                 )
-        fo.ax.set_ylim(ymax=60)
+        fo.ax.set_ylim(ymin=0, ymax=60)
         fo.ax.minorticks_on()
         fo.ax.grid(axis='both', which='both', linestyle=':', color='xkcd:light gray')
         fo.ax.set_ylabel('(backw avg) growth in percent per day')
