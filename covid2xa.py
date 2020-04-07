@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 cName = 'covid2xa'
-cVersion = '4.2.0'
+cVersion = '4.2.1'
 cCopyright = 'Copyright (C) by XA, III - IV 2020. All rights reserved.'
 #
 # * How to set it up:
@@ -204,18 +204,10 @@ class FigureObj(object):
         if fOptions['noshow']:
             self._fig = mpl.figure.Figure()
             self._ax = self._fig.subplots(nRows, nCols, **kwargs)
-            # for i in range(1, nRows*nCols+1):
-            #     self._fig.add_subplot(nRows, nCols, i)
-            # self._ax = np.array(self._fig.axes) if nRows*nCols > 1 else self._fig.axes[0]
         else:
             self._fig, self._ax = plt.subplots(nRows, nCols, **kwargs)
 
     def __del__ (self):
-        # if fOptions['noshow']:
-        #     pass
-        # else:
-        #     pass
-        #self._fig.clear()
         # DBG: print('OBJ DEL', self)
         del self._ax
         del self._fig
