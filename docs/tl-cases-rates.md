@@ -14,34 +14,42 @@
 
  Germany  | &nbsp;
 :----------|------------
+![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-Germany.svg) |
 ![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-Germany.svg) | ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-Germany.svg)
 
  Belgium  | &nbsp;
 :----------|------------
+![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-Belgium.svg) |
 ![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-Belgium.svg) | ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-Belgium.svg)
 
  Switzerland | &nbsp;
 :----------|------------
+![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-Switzerland.svg) |
 ![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-Switzerland.svg) | ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-Switzerland.svg)
 
  Italy  | &nbsp;
 :----------|------------
+![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-Italy.svg) |
 ![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-Italy.svg) | ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-Italy.svg)
 
  Spain  | &nbsp;
 :----------|------------
+![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-Spain.svg) |
 ![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-Spain.svg) | ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-Spain.svg)
 
  Sweden  | &nbsp;
 :----------|------------
+![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-Sweden.svg) |
 ![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-Sweden.svg) | ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-Sweden.svg)
 
  China  | &nbsp;
 :----------|------------
+![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-China.svg) |
 ![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-China.svg) | ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-China.svg)
 
  United States  | &nbsp;
 :----------|------------
+![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-United_States.svg) |
 ![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-United_States.svg) | ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-United_States.svg)
 
 
