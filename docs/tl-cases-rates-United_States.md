@@ -3,6 +3,8 @@
 
 ### Timeline of growth
 
+![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-United_States.svg)
+
 ![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-United_States.svg)
 
 ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-United_States.svg)

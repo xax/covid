@@ -3,6 +3,8 @@
 
 ### Timeline of growth
 
+![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-China.svg)
+
 ![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-China.svg)
 
 ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-China.svg)

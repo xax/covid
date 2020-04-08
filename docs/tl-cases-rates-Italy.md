@@ -3,6 +3,8 @@
 
 ### Timeline of growth
 
+![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-Italy.svg)
+
 ![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-Italy.svg)
 
 ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-Italy.svg)

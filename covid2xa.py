@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 cName = 'covid2xa'
-cVersion = '4.2.2'
+cVersion = '4.2.4'
 cCopyright = 'Copyright (C) by XA, III - IV 2020. All rights reserved.'
 #
 # * How to set it up:
@@ -81,6 +81,7 @@ fOptions = {
 
 
 def parseOptions (fOptions, fTasks):
+    ''' Parse command line options into passed `fOptions` and `fTasks`. '''
     try:
         optlist, args = getopt.gnu_getopt(sys.argv[1:], 'haXcprCdg')
     except getopt.GetoptError as err:
@@ -137,7 +138,9 @@ else:
 
 # %%
 def dfLoadGeoNamesData (fname='./countryInfo.txt'):
-    # https://download.geonames.org/export/dump/countryInfo.txt
+    ''' Load country specific data from GeoNames database.
+        # https://download.geonames.org/export/dump/countryInfo.txt
+    '''
     df = pd.read_csv(fname,
                      skiprows=51,
                      skip_blank_lines=True,
@@ -155,7 +158,9 @@ def dfLoadGeoNamesData (fname='./countryInfo.txt'):
 
 # %%
 def dfLoadCountriesDataStatJHUWDv2 (fname=rcConfig.pDataJHUWDBase+'cases_country.csv'):
-    # https://raw.githubusercontent.com/CSSEGISandData/COVID-19/web-data/data/cases_country.csv
+    ''' Load JHU `cases per country` snapshot data .
+        # https://raw.githubusercontent.com/CSSEGISandData/COVID-19/web-data/data/cases_country.csv
+    '''
     df = pd.read_csv(rcConfig.pDataJHUWDBase+'cases_country.csv',#fname,
                      header=0,
                      index_col='country',
@@ -168,7 +173,9 @@ def dfLoadCountriesDataStatJHUWDv2 (fname=rcConfig.pDataJHUWDBase+'cases_country
 
 
 def dfLoadCasesTLCovAPIv1 (fname=rcConfig.pDataCovidDataBase+'docs/v1/countries/cases.csv'):
-    # https://raw.githubusercontent.com/coviddata/coviddata/master/docs/v1/countries/cases.csv
+    ''' Load coviddata preprocessed JHU `cases` per country timeline data.
+        # https://raw.githubusercontent.com/coviddata/coviddata/master/docs/v1/countries/cases.csv
+    '''
     return pd.read_csv(fname, index_col=0)
 
 
@@ -198,6 +205,10 @@ def provideTLPerCountry (dftlCases, countries):
 
 
 class FigureObj(object):
+    ''' Class representing MATPlotLib Figure with Axes.
+        Construct and show dependend on `fOptions['noshow']`;
+        manage lifetime.
+    '''
     __slots__ = ['_fig', '_ax']
 
     def __init__ (self, nRows=1, nCols=1, **kwargs):
@@ -249,14 +260,10 @@ class FigureObj(object):
             if noshow is not True:
                 plt.subplot(self._fig.gca())
 
-
-
-
-# %%
-def axRotateLabels (ax):
-    for label in ax.get_xticklabels():
-        label.set_rotation(40)
-        label.set_horizontalalignment('right')
+    def axRotateLabels(self):
+        for label in self._ax.get_xticklabels():
+            label.set_rotation(40)
+            label.set_horizontalalignment('right')
 
 
 # %%
@@ -481,7 +488,7 @@ if fTasks['tl_cases']:
 
     # fo.ax.xaxis.set_major_locator(locator)
     # fo.ax.xaxis.set_major_formatter(formatter)
-    axRotateLabels(fo.ax)
+    fo.axRotateLabels()
     fo.ax.minorticks_on()
     fo.ax.grid(axis='x', which='both', linestyle=':', color='xkcd:light gray')
     fo.ax.legend(title='Countries')
@@ -508,7 +515,7 @@ if fTasks['tl_cases']:
 
     # fo.ax.xaxis.set_major_locator(locator)
     # fo.ax.xaxis.set_major_formatter(formatter)
-    axRotateLabels(fo.ax)
+    fo.axRotateLabels()
     fo.ax.minorticks_on()
     fo.ax.grid(axis='x', which='both', linestyle=':', color='xkcd:light gray')
     fo.ax.legend(title='Countries')
@@ -553,6 +560,7 @@ if fTasks['gr_cases']:
                 )
         fo.ax.set_ylim(ymin=0, ymax=60)
         fo.ax.minorticks_on()
+        fo.axRotateLabels()
         fo.ax.grid(axis='both', which='both', linestyle=':', color='xkcd:light gray')
         fo.ax.set_ylabel('(backw avg) growth in percent per day')
         fo.ax.legend(title='Avg over $n$ days')
@@ -560,6 +568,34 @@ if fTasks['gr_cases']:
         fo.show('tl-rates-confirmed-{:s}.svg'.format(country))
 
     # ##
+
+    for country in countries:
+        dfCountry = pd.DataFrame(dftlCases.loc[:,country])
+
+        d = 4
+        dfCountry = dfCountry.join(
+                      dftlCases.loc[:,country].rename("{:d} days".format(d)) \
+                      .rolling(window=d+1, center=False) \
+                      .apply(lambda v: np.log(2)/np.log((v[d]/v[0])**(1./d)), raw=True)
+                    )
+
+        fo = FigureObj()
+        dfCountry.iloc[:,1:].plot(ax=fo.ax, kind='line',
+                    logy=False,
+                    marker='o',
+                    title='Confirmed cases in {:s} double every $n$ days ({:s}..{:s})'.format(country, strDateFirst, strDateLast),
+                    figsize=(13,8)
+                )
+        fo.ax.set_ylim(ymin=0, ymax=25)
+        fo.ax.minorticks_on()
+        fo.axRotateLabels()
+        fo.ax.grid(axis='both', which='both', linestyle=':', color='xkcd:light gray')
+        fo.ax.set_ylabel('cases double every $n$ days (backw avg over {:n} days)'.format(d))
+        #fo.ax.legend(title='Avg over $n$ days')
+
+        fo.show('tl-doubles-confirmed-{:s}.svg'.format(country))
+
+    # ## ## ## ## ## ##
 
     dftlCases = dfLoadCasesTLCovAPIv1(rcConfig.pDataCovidDataBase+'docs/v1/countries/deaths.csv')
     strDateFirst = dftlCases.iloc[:,0].name
@@ -590,6 +626,7 @@ if fTasks['gr_cases']:
                 )
         fo.ax.set_ylim(ymin=0, ymax=60)
         fo.ax.minorticks_on()
+        fo.axRotateLabels()
         fo.ax.grid(axis='both', which='both', linestyle=':', color='xkcd:light gray')
         fo.ax.set_ylabel('(backw avg) growth in percent per day')
         fo.ax.legend(title='Avg over $n$ days')

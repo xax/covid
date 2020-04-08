@@ -3,6 +3,8 @@
 
 ### Timeline of growth
 
+![(average) confirmed doubling days timeline](./assets/images/tl-doubles-confirmed-Belgium.svg)
+
 ![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-Belgium.svg)
 
 ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-Belgium.svg)

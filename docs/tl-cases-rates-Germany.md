@@ -3,6 +3,8 @@
 
 ### Timeline of growth
 
+![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-Germany.svg)
+
 ![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-Germany.svg)
 
 ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-Germany.svg)

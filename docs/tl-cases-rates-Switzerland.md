@@ -3,6 +3,8 @@
 
 ### Timeline of growth
 
+![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-Switzerland.svg)
+
 ![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-Switzerland.svg)
 
 ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-Switzerland.svg)
