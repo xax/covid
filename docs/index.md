@@ -31,6 +31,13 @@ red          |  4%    |
 
 ---
 
+![Confirmed cases relative to the day when at least 100 cases were on the record](./assets/images/tl-rates-0d-confirmed.svg)
+
+
+![Fatalities relative to the day when at least 100 fatalities were on the record](./assets/images/tl-rates-0d-deaths.svg)
+
+
+
 
 [cases-pcap-absrel]: ./cases-pcap-absrel.md
 [tl-cases-rates]: ./tl-cases-rates.md

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 cName = 'covid2xa'
-cVersion = '4.2.4'
+cVersion = '4.3.0'
 cCopyright = 'Copyright (C) by XA, III - IV 2020. All rights reserved.'
 #
 # * How to set it up:
@@ -50,7 +50,7 @@ def usage ():
 {cCopyright}
 
 + Usage:
-    {cName} {{ -h | -[aX] | -[cprCdg] }}
+    {cName} {{ -h | -[aX] | -[cprCdgz] }}
 
     -a      -- show all graphics
     -X      -- create, but don't show
@@ -62,6 +62,7 @@ def usage ():
     -d      -- fatalities v cases
 
     -g      -- growth rates of confirmed cases
+    -z      -- growth of confirmed cases on a relative timeline
 """)
     pass
 
@@ -73,6 +74,7 @@ fTasks = {
         'tl_cases': False,
         'deathrate': False,
         'gr_cases': False,
+        'gr_zeroday_cases': False,
         }
 fOptions = {
         'all': False,
@@ -83,7 +85,7 @@ fOptions = {
 def parseOptions (fOptions, fTasks):
     ''' Parse command line options into passed `fOptions` and `fTasks`. '''
     try:
-        optlist, args = getopt.gnu_getopt(sys.argv[1:], 'haXcprCdg')
+        optlist, args = getopt.gnu_getopt(sys.argv[1:], 'haXcprCdgz')
     except getopt.GetoptError as err:
         print(err)
         usage()
@@ -111,6 +113,8 @@ def parseOptions (fOptions, fTasks):
             fTasks['deathrate'] = True
         elif o == '-g':
             fTasks['gr_cases'] = True
+        elif o == '-z':
+            fTasks['gr_zeroday_cases'] = True
 
     if fAll:
         for k in fTasks.keys():
@@ -179,12 +183,12 @@ def dfLoadCasesTLCovAPIv1 (fname=rcConfig.pDataCovidDataBase+'docs/v1/countries/
     return pd.read_csv(fname, index_col=0)
 
 
-def dfLoadDataTLCovAPIv1 (fname=rcConfig.pDataCovidDataBase+'data/sources/jhu_csse/standardized/standardized.csv'):
-    # https://raw.githubusercontent.com/coviddata/coviddata/master/data/sources/jhu_csse/standardized/standardized.csv
-    return pd.read_csv(fname,
-                       index_col=[0,1]
-                      ) \
-        .groupby(level=[0,1]).sum()
+# def dfLoadDataTLCovAPIv1 (fname=rcConfig.pDataCovidDataBase+'data/sources/jhu_csse/standardized/standardized.csv'):
+#     # https://raw.githubusercontent.com/coviddata/coviddata/master/data/sources/jhu_csse/standardized/standardized.csv
+#     return pd.read_csv(fname,
+#                        index_col=[0,1]
+#                       ) \
+#         .groupby(level=[0,1]).sum()
 
 
 
@@ -438,14 +442,9 @@ if fTasks['deathrate']:
     fo.ax.plot(X, 0.04 * X, linestyle='-', color='#FF4040')
     fo.ax.plot(X, 0.11 * X, linestyle=':', color='xkcd:light purple')
 
-    for c in dfD.index:
-        # NB: this is slow!
-        cData = dfD.loc[c]
-        x = cData['confirmed']
-        y = cData['deaths']
+    for r in dfD.itertuples():
         rnd = np.random.random() * 40 - 20
-        fo.ax.text(x, y, c, rotation=20+rnd, size=9)
-
+        fo.ax.text(r.confirmed, r.deaths, r.Index, rotation=20+rnd, size=9)
 
     # %%
     fo.show('cases-deaths-ll.svg')
@@ -577,6 +576,7 @@ if fTasks['gr_cases']:
                       dftlCases.loc[:,country].rename("{:d} days".format(d)) \
                       .rolling(window=d+1, center=False) \
                       .apply(lambda v: np.log(2)/np.log((v[d]/v[0])**(1./d)), raw=True)
+                      #.apply(lambda v: np.log(2)/np.log((v[d]/v[0])**(1./d)) if v[0] != 0 else np.inf, raw=True)
                     )
 
         fo = FigureObj()
@@ -619,7 +619,7 @@ if fTasks['gr_cases']:
         fo = FigureObj()
         dfCountry.iloc[:,1:].plot(ax=fo.ax, kind='line',
                     logy=False,
-                    marker='o',
+                    marker='+',
                     title='Fatalities, daily growth rate in {:s} ({:s}..{:s})'.format(country, strDateFirst, strDateLast),
                     #title='Confirmed cases, growth rate in '+country+' ('+strDateFirst+'..'+strDateLast+')',
                     figsize=(13,8)
@@ -634,6 +634,78 @@ if fTasks['gr_cases']:
         fo.show('tl-rates-deaths-{:s}.svg'.format(country))
 
 
+
+# ############################################################################
+
+if fTasks['gr_zeroday_cases']:
+    dftlCases = dfLoadCasesTLCovAPIv1()
+    countriesPreselect = ['Belgium','Germany','Switzerland','France','Italy','Spain','Sweden','Japan','South Korea','China','United States']
+    dftlCases = provideTLPerCountry(dftlCases, countriesPreselect)
+
+    countries = ['Germany','Belgium','Switzerland','Italy','Spain','Sweden','China','United States']
+    nBase = 100
+
+    nRowsMax = dftlCases.shape[0]
+    dfD = pd.DataFrame(index=range(0, nRowsMax))
+    for c in countries:
+        dstl = dftlCases[c]
+        for i in range(0, dstl.size):
+            if dstl.iloc[i] >= nBase:
+                break
+        dstl = dstl.shift(-i)
+        dfD = dfD.merge(pd.Series(data=dstl.values, index=range(0, nRowsMax), name=c), how='left', left_index=True, right_index=True)
+
+    fo = FigureObj()
+    dfD.plot(ax=fo.ax, kind='line',
+                logy=True,
+                marker='o',
+                title='Confirmed cases relative to the day at least {:n} cases were on the record'.format(nBase),
+                figsize=(13,8)
+            )
+    fo.ax.minorticks_on()
+    fo.ax.grid(axis='both', which='both', linestyle=':', color='xkcd:light gray')
+    fo.ax.set_xlim(xmin=0)
+    fo.ax.set_ylim(ymin=nBase)
+    fo.ax.set_xlabel('days since the day when ${{}}>{:n}$ cases where on the record'.format(nBase))
+    fo.ax.set_ylabel('confirmed cases')
+    fo.ax.legend(title='Country')
+
+    fo.show('tl-rates-0d-confirmed.svg')
+
+    # ## ## ## ## ## ##
+
+    dftlCases = dfLoadCasesTLCovAPIv1(rcConfig.pDataCovidDataBase+'docs/v1/countries/deaths.csv')
+    dftlCases = provideTLPerCountry(dftlCases, countriesPreselect)
+
+    countries = ['Germany','Belgium','Switzerland','Italy','Spain','Sweden','China','United States']
+    nBase = 10
+
+    nRowsMax = dftlCases.shape[0]
+    dfD = pd.DataFrame(index=range(0, nRowsMax))
+    for c in countries:
+        dstl = dftlCases[c]
+        for i in range(0, dstl.size):
+            if dstl.iloc[i] >= nBase:
+                break
+        dstl = dstl.shift(-i)
+        dfD = dfD.merge(pd.Series(data=dstl.values, index=range(0, nRowsMax), name=c), how='left', left_index=True, right_index=True)
+
+    fo = FigureObj()
+    dfD.plot(ax=fo.ax, kind='line',
+                logy=True,
+                marker='+',
+                title='Fatalities relative to the day at least {:n} fatalities were on the record'.format(nBase),
+                figsize=(13,8)
+            )
+    fo.ax.minorticks_on()
+    fo.ax.grid(axis='both', which='both', linestyle=':', color='xkcd:light gray')
+    fo.ax.set_xlim(xmin=0)
+    fo.ax.set_ylim(ymin=nBase)
+    fo.ax.set_xlabel('days since the day when ${{}}>{:n}$ fatalities where on the record'.format(nBase))
+    fo.ax.set_ylabel('fatalities')
+    fo.ax.legend(title='Country')
+
+    fo.show('tl-rates-0d-deaths.svg')
 
 #plt.subplots()
 

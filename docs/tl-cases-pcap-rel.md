@@ -16,6 +16,15 @@ red          |  4
 grey         |  2
 
 
+### Timeline of confirmed cases relative to the day when *n* cases were on the record
+
+![Confirmed cases relative to the day when at least 100 cases were on the record](./assets/images/tl-rates-0d-confirmed.svg)
+
+
+### Timeline of fatalities relative to the day when *n* fatalities were on the record
+
+![Fatalities relative to the day when at least 100 fatalities were on the record](./assets/images/tl-rates-0d-deaths.svg)
+
 
 <sup><sub>Portions copyright © XA, III-IV 2020. All rights reserved.</sub></sup>
 
