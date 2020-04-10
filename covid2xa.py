@@ -473,6 +473,9 @@ if fTasks['deathrate']:
         for r in df.tail(-80).itertuples():
             rnd = np.random.random() * 40 - 20
             fo.ax.text(r.confirmed, r.deaths, r.Index, rotation=20+rnd, size=9)
+        if fOptions['noshow']:
+            import matplotlib.backend_bases
+            fo.fig.canvas.renderer = matplotlib.backend_bases.RendererBase()
         adjustText.adjust_text(texts, ax=fo.ax, lim=20, arrowprops=dict(arrowstyle='->', color='orange'))
     else:
         for r in dfD.itertuples():
@@ -481,8 +484,6 @@ if fTasks['deathrate']:
 
     # %%
     fo.show('cases-deaths-ll.svg')
-
-
 
 
 # ############################################################################
