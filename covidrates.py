@@ -3,6 +3,14 @@ cName = 'covidrates'
 cVersion = '2.1.0'
 cCopyright = 'Copyright (C) by XA, III - IV 2020. All rights reserved.'
 #
+# * Preparation to environment
+#   #0 create virtual environment (optional)
+#    $ python -m venv ./.venv
+#    $ source ./.venv/bin/activate
+#
+#   #1 install dependencies
+#    $ pip install numpy matplotlib pandas
+#
 # * How to set it up:
 #
 #   #1 clone [JHUCSSE] repository

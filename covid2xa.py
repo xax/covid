@@ -1,7 +1,17 @@
 #!/usr/bin/env python3
 cName = 'covid2xa'
-cVersion = '4.3.0'
+cVersion = '4.4.0'
 cCopyright = 'Copyright (C) by XA, III - IV 2020. All rights reserved.'
+#
+# * Preparation to environment
+#
+#   #0 create virtual environment (optional)
+#    $ python -m venv ./.venv
+#    $ source ./.venv/bin/activate
+#
+#   #1 install dependencies
+#    $ pip install numpy matplotlib pandas
+#    $ pip install adjustText  # (optional)
 #
 # * How to set it up:
 #
@@ -50,10 +60,11 @@ def usage ():
 {cCopyright}
 
 + Usage:
-    {cName} {{ -h | -[aX] | -[cprCdgz] }}
+    {cName} {{ -h | -[aXY] | -[cprCdgz] }}
 
     -a      -- show all graphics
     -X      -- create, but don't show
+    -Y      -- don't spend time on trying to arrange labels
 
     -c      -- cases diagram
     -p      -- prevalence diagrams
@@ -78,14 +89,15 @@ fTasks = {
         }
 fOptions = {
         'all': False,
-        'noshow': False
+        'noshow': False,
+        'hasAdjustText': True,
         }
 
 
 def parseOptions (fOptions, fTasks):
     ''' Parse command line options into passed `fOptions` and `fTasks`. '''
     try:
-        optlist, args = getopt.gnu_getopt(sys.argv[1:], 'haXcprCdgz')
+        optlist, args = getopt.gnu_getopt(sys.argv[1:], 'haXYcprCdgz')
     except getopt.GetoptError as err:
         print(err)
         usage()
@@ -101,6 +113,8 @@ def parseOptions (fOptions, fTasks):
             fOptions['all'] = True
         elif o == '-X':
             fOptions['noshow'] = True
+        elif o == '-Y':
+            fTasks['hasAdjustText'] = False
         elif o == '-c':
             fTasks['cases'] = True
         elif o == '-p':
@@ -126,6 +140,12 @@ parseOptions(fOptions, fTasks)
 
 
 # %%
+try:
+    if fOptions['hasAdjustText']:
+      import adjustText
+except:
+    fOptions['hasAdjustText'] = False
+
 import matplotlib as mpl
 import matplotlib.dates as mdates
 # Use MPLBACKEND=TkAgg
@@ -442,9 +462,22 @@ if fTasks['deathrate']:
     fo.ax.plot(X, 0.04 * X, linestyle='-', color='#FF4040')
     fo.ax.plot(X, 0.11 * X, linestyle=':', color='xkcd:light purple')
 
-    for r in dfD.itertuples():
-        rnd = np.random.random() * 40 - 20
-        fo.ax.text(r.confirmed, r.deaths, r.Index, rotation=20+rnd, size=9)
+    if fOptions['hasAdjustText']:
+        df = dfD.sort_values(by='deaths',ascending=False)
+        df = df[df.deaths > 1]
+        df = df[df.confirmed > 10]
+        texts = []
+        for r in df.head(80).itertuples():
+            text = fo.ax.text(r.confirmed, r.deaths, r.Index, size=9)
+            texts.append(text)
+        for r in df.tail(-80).itertuples():
+            rnd = np.random.random() * 40 - 20
+            fo.ax.text(r.confirmed, r.deaths, r.Index, rotation=20+rnd, size=9)
+        adjustText.adjust_text(texts, ax=fo.ax, lim=20, arrowprops=dict(arrowstyle='->', color='orange'))
+    else:
+        for r in dfD.itertuples():
+            rnd = np.random.random() * 40 - 20
+            texts.append(fo.ax.text(r.confirmed, r.deaths, r.Index, rotation=20+rnd, size=9))
 
     # %%
     fo.show('cases-deaths-ll.svg')
