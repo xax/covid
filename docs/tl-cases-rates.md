@@ -22,6 +22,11 @@
 ![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-Belgium.svg) |
 ![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-Belgium.svg) | ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-Belgium.svg)
 
+ The Netherlands  | &nbsp;
+:----------|------------
+![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-Netherlands.svg) |
+![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-Netherlands.svg) | ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-Netherlands.svg)
+
  Switzerland | &nbsp;
 :----------|------------
 ![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-Switzerland.svg) |
