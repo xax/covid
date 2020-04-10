@@ -5,6 +5,7 @@
 
 - [Germany](tl-cases-rates-Germany.md)
 - [Belgium](tl-cases-rates-Belgium.md)
+- [The Netherlands](tl-cases-rates-Netherlands.md)
 - [Switzerland](tl-cases-rates-Switzerland.md)
 - [Italy](tl-cases-rates-Italy.md)
 - [Spain](tl-cases-rates-Spain.md)
