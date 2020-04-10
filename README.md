@@ -43,18 +43,18 @@ To run the visualization script you need *Python* (as of versions *3.6+*), of co
 
 9. show command line options help
 
-    `$ python3 ./covis2xa.py -h`
+    `$ python3 ./covid2xa.py -h`
 
 
-## Run the visualization script `covis2xa.py`
+## Run the visualization script `covid2xa.py`
 
 - show all plots and create SVG files
 
-    `$ python ./covis2xa.py -a`
+    `$ python ./covid2xa.py -a`
 
 - create all plots as SVG files only
 
-    `$ python ./covis2xa.py -aX`
+    `$ python ./covid2xa.py -aX`
 
 
 [JHUCSSE]: https://github.com/CSSEGISandData/COVID-19 "2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE"
