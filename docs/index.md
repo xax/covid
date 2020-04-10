@@ -27,7 +27,7 @@ red          |  4%    |
 *purple*     |  11%   | SARS
 
 
-<sup><sub>Portions copyright © XA, III 2020. All rights reserved.</sub></sup>
+<sup><sub>Portions copyright © XA, III-IV 2020. All rights reserved.</sub></sup>
 
 ---
 
