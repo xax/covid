@@ -5,40 +5,57 @@
 
 # Data visualization
 
-## Preparations and Dependencies
+
+## Preparations and Dependencies
+
 To run the visualization script you need *Python* (as of versions *3.6+*), of course, and probably want to prepare the environment as follows:
 
 0. create virtual environment (*optional*)
+
     `$ python -m venv ./.venv`
+
     `$ source ./.venv/bin/activate`
 
 1. install dependencies
+
     `$ pip install numpy matplotlib pandas`
+
     `$ sudo apt-get install python3-tk`  *#* (*perhaps; Debian'ish case*)
+
     `$ pip install Tkinter`  *#* (*possibly*)
+
     `$ pip install adjustText`  *#* (*optional*)
 
 
-## Setup of data sources
+## Setup of data sources
 
 1. clone [JHUCSSE] repository
+
     `$ git clone -b wed-data https://github.com/CSSEGISandData/COVID-19.git`
 
 2. clone [CovidData] repository
+
     `$ git clone https://github.com/coviddata/coviddata.git`
 
 3. retrieve GeoNmes [CountryDataGN] database
+
     `$ wget https://download.geonames.org/export/dump/countryInfo.txt`
 
 9. show command line options help
+
     `$ python3 ./covis2xa.py -h`
 
-## Rund the visualization script `covis2xa.py`
+
+## Run the visualization script `covis2xa.py`
 
 - show all plots and create SVG files
+
     `$ python ./covis2xa.py -a`
+
 - create all plots as SVG files only
+
     `$ python ./covis2xa.py -aX`
+
 
 [JHUCSSE]: https://github.com/CSSEGISandData/COVID-19 "2019 Novel Coronavirus COVID-19 (2019-nCoV) Data Repository by Johns Hopkins CSSE"
 [CovidData]: https://github.com/coviddata/coviddata "CovidData, preprocessed JHU CSSE and New York Times data"
