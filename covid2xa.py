@@ -277,7 +277,20 @@ class FigureObj(object):
     def show(self, fName=None, noshow=None, pause=True, pBase=None, format='svg'):
         if fName is not None:
             if pBase is None: pBase = rcConfig.pImagesBase
-            self._fig.savefig(pBase + __class__._sanitizeFName(fName), format=format)
+            # [QUIRK]
+            for cntRetry in range(4):
+                try:
+                    self._fig.savefig(pBase + __class__._sanitizeFName(fName), format=format)
+                except OSError as e:  # catch sporadic OSErrors - some race condition?
+                    if e.errno != 22: # errno.???
+                        raise  # re-raise if unrelated exception
+                    print("OSError {:n} on 'savefig' regarding '{:s}' ('{:s}')".format(e.errno, e.filename, e.filename2), file=sys.stderr, flush=True)
+                else:  # break from re-try loop on success
+                    break
+            else:  # out of tries
+                print("Multiple OSErrors on 'savefig' - even tried multiple times.", file=sys.stderr, flush=True)
+                raise OSError()
+            # [/QUIRK]
         if fOptions['noshow']:
             pass
         else:
