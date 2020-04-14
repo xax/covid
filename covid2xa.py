@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 cName = 'covid2xa'
-cVersion = '4.4.0'
+cVersion = '4.5.0'
 cCopyright = 'Copyright (C) by XA, III - IV 2020. All rights reserved.'
 #
 # * Preparation to environment
@@ -187,13 +187,33 @@ def dfLoadCountriesDataStatJHUWDv2 (fname=rcConfig.pDataJHUWDBase+'cases_country
     '''
     df = pd.read_csv(rcConfig.pDataJHUWDBase+'cases_country.csv',#fname,
                      header=0,
-                     index_col='country',
+                     index_col=1,
+                     # v2: Country_Region,Last_Update,Lat,Long_,Confirmed,Deaths,Recovered,Active
                      names=['country', 'upd', 'lat', 'lon', 'confirmed', 'deaths', 'recovered', 'active']
                     )
     #Python 3.7+: tUpdate = df['upd'].apply(lambda x: pd.Timestamp.fromisoformat(x)).max()
     tUpdate = df['upd'].apply(lambda x: datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S')).max()
     # tUpdate.tz_localize('UTC')
     return df, tUpdate.to_pydatetime()
+
+
+def dfLoadCountriesDataStatJHUWDv3 (fname=rcConfig.pDataJHUWDBase+'cases_country.csv'):
+    ''' Load JHU `cases per country` snapshot data .
+        # https://raw.githubusercontent.com/CSSEGISandData/COVID-19/web-data/data/cases_country.csv
+    '''
+    df = pd.read_csv(rcConfig.pDataJHUWDBase+'cases_country.csv',#fname,
+                     header=0,
+                     index_col=0, #'country',
+                     # v3: Country_Region,Last_Update,Lat,Long_,Confirmed,Deaths,Recovered,Active,Incident_Rate,People_Tested,People_Hospitalized,Mortality_Rate,UID,ISO3
+                     names=['country', 'upd', 'lat', 'lon', 'confirmed', 'deaths', 'recovered', 'active', 'incidencerate', 'tested', 'hospitalized', 'mortalityrate', 'uid', 'cocoISO3']
+                    )
+    #Python 3.7+: tUpdate = df['upd'].apply(lambda x: pd.Timestamp.fromisoformat(x)).max()
+    tUpdate = df['upd'].apply(lambda x: datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S')).max()
+    # tUpdate.tz_localize('UTC')
+    return df, tUpdate.to_pydatetime()
+
+
+dfLoadCountriesDataStatJHUWD = dfLoadCountriesDataStatJHUWDv3
 
 
 def dfLoadCasesTLCovAPIv1 (fname=rcConfig.pDataCovidDataBase+'docs/v1/countries/cases.csv'):
@@ -320,7 +340,7 @@ class FigureObj(object):
 dfCountryData = dfLoadGeoNamesData()
 
 # %%
-dfCOVID, pydtUpdate = dfLoadCountriesDataStatJHUWDv2()
+dfCOVID, pydtUpdate = dfLoadCountriesDataStatJHUWD()
 theDate = pydtUpdate.strftime('%Y-%m-%d')
 dfData = provideLocPerData(dfCOVID, dfCountryData)
 

@@ -37,7 +37,7 @@ To run the visualization script you need *Python* (as of versions *3.6+*), of co
 
     `$ git clone https://github.com/coviddata/coviddata.git`
 
-3. retrieve GeoNmes [CountryDataGN] database
+3. retrieve GeoNames [CountryDataGN] database
 
     `$ wget https://download.geonames.org/export/dump/countryInfo.txt`
 
