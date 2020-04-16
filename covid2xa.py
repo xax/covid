@@ -304,7 +304,8 @@ class FigureObj(object):
                 except OSError as e:  # catch sporadic OSErrors - some race condition?
                     if e.errno != 22: # errno.???
                         raise  # re-raise if unrelated exception
-                    print("OSError {:n} on 'savefig' regarding '{:s}' ('{:s}')".format(e.errno, e.filename, e.filename2), file=sys.stderr, flush=True)
+                    #print("OSError {:n} on 'savefig' regarding '{:s}' ('{:s}')".format(e.errno, e.filename, e.filename2), file=sys.stderr, flush=True)
+                    print("OSError {:n} on 'savefig':".format(e.errno) +  e, file=sys.stderr, flush=True)
                 else:  # break from re-try loop on success
                     break
             else:  # out of tries
