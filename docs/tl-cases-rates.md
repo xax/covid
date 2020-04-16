@@ -15,48 +15,48 @@
 
  Germany  | &nbsp;
 :----------|------------
-![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-Germany.svg) |
-![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-Germany.svg) | ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-Germany.svg)
+[![(average) confirmed rates timeline][tldc-Germany]][tldc-Germany] |
+[![(average) confirmed rates timeline][tlrc-Germany]][tlrc-Germany] |  [![(average) deaths rates timeline][tlrd-Germany]][tlrd-Germany]
 
  Belgium  | &nbsp;
 :----------|------------
-![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-Belgium.svg) |
-![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-Belgium.svg) | ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-Belgium.svg)
+[![(average) confirmed rates timeline][tldc-Belgium]][tldc-Belgium] |
+[![(average) confirmed rates timeline][tlrc-Belgium]][tlrc-Belgium] | [![(average) deaths rates timeline][tlrd-Belgium]][tlrd-Belgium]
 
  The Netherlands  | &nbsp;
 :----------|------------
-![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-Netherlands.svg) |
-![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-Netherlands.svg) | ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-Netherlands.svg)
+[![(average) confirmed rates timeline][tldc-Netherlands]][tldc-Netherlands] |
+[![(average) confirmed rates timeline][tlrc-Netherlands]][tlrc-Netherlands] | [![(average) deaths rates timeline][tlrd-Netherlands]][tlrd-Netherlands]
 
  Switzerland | &nbsp;
 :----------|------------
-![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-Switzerland.svg) |
-![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-Switzerland.svg) | ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-Switzerland.svg)
+[![(average) confirmed rates timeline][tldc-Switzerland]][tldc-Switzerland] |
+[![(average) confirmed rates timeline][tlrc-Switzerland]][tlrc-Switzerland] | [![(average) deaths rates timeline][tlrd-Switzerland]][tlrd-Switzerland]
 
  Italy  | &nbsp;
 :----------|------------
-![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-Italy.svg) |
-![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-Italy.svg) | ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-Italy.svg)
+[![(average) confirmed rates timeline][tldc-Italy]][tldc-Italy] |
+[![(average) confirmed rates timeline][tlrc-Italy]][tlrc-Italy] | [![(average) deaths rates timeline][tlrd-Italy]][tlrd-Italy]
 
  Spain  | &nbsp;
 :----------|------------
-![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-Spain.svg) |
-![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-Spain.svg) | ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-Spain.svg)
+[![(average) confirmed rates timeline][tldc-Spain]][tldc-Spain] |
+[![(average) confirmed rates timeline][tlrc-Spain]][tlrc-Spain] | [![(average) deaths rates timeline][tlrd-Spain]][tlrd-Spain]
 
  Sweden  | &nbsp;
 :----------|------------
-![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-Sweden.svg) |
-![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-Sweden.svg) | ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-Sweden.svg)
+[![(average) confirmed rates timeline][tldc-Sweden]][tldc-Sweden] |
+[![(average) confirmed rates timeline][tlrc-Sweden]][tlrc-Sweden] | [![(average) deaths rates timeline][tlrd-Sweden]][tlrd-Sweden]
 
  China  | &nbsp;
 :----------|------------
-![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-China.svg) |
-![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-China.svg) | ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-China.svg)
+[![(average) confirmed rates timeline][tldc-China]][tldc-China] |
+[![(average) confirmed rates timeline][tlrc-China]][tlrc-China] | [![(average) deaths rates timeline][tlrd-China]][tlrd-China]
 
  United States  | &nbsp;
 :----------|------------
-![(average) confirmed rates timeline](./assets/images/tl-doubles-confirmed-United_States.svg) |
-![(average) confirmed rates timeline](./assets/images/tl-rates-confirmed-United_States.svg) | ![(average) deaths rates timeline](./assets/images/tl-rates-deaths-United_States.svg)
+[![(average) confirmed rates timeline][tldc-United_States]][tldc-United_States] |
+[![(average) confirmed rates timeline][tlrc-United_States]][tlrc-United_States] | [![(average) deaths rates timeline][tlrd-United_States]][tlrd-United_States]
 
 
 <sup><sub>Portions copyright © XA, III-IV 2020. All rights reserved.</sub></sup>
@@ -64,3 +64,39 @@
 [^1]: Data sources, licenses and attribution as well as copyright notes can be found on the [front page][main].
 
 [main]: ./ "Data sources, licenses and attribution, copyright notes"
+
+[tldc-Germany]: ./assets/images/tl-doubles-confirmed-Germany.svg
+[tlrc-Germany]:   ./assets/images/tl-rates-confirmed-Germany.svg
+[tlrd-Germany]:      ./assets/images/tl-rates-deaths-Germany.svg
+
+[tldc-Belgium]: ./assets/images/tl-doubles-confirmed-Belgium.svg
+[tlrc-Belgium]:   ./assets/images/tl-rates-confirmed-Belgium.svg
+[tlrd-Belgium]:      ./assets/images/tl-rates-deaths-Belgium.svg
+
+[tldc-Netherlands]: ./assets/images/tl-doubles-confirmed-Netherlands.svg
+[tlrc-Netherlands]:   ./assets/images/tl-rates-confirmed-Netherlands.svg
+[tlrd-Netherlands]:      ./assets/images/tl-rates-deaths-Netherlands.svg
+
+[tldc-Switzerland]: ./assets/images/tl-doubles-confirmed-Switzerland.svg
+[tlrc-Switzerland]:   ./assets/images/tl-rates-confirmed-Switzerland.svg
+[tlrd-Switzerland]:      ./assets/images/tl-rates-deaths-Switzerland.svg
+
+[tldc-Italy]: ./assets/images/tl-doubles-confirmed-Italy.svg
+[tlrc-Italy]:   ./assets/images/tl-rates-confirmed-Italy.svg
+[tlrd-Italy]:      ./assets/images/tl-rates-deaths-Italy.svg
+
+[tldc-Spain]: ./assets/images/tl-doubles-confirmed-Spain.svg
+[tlrc-Spain]:   ./assets/images/tl-rates-confirmed-Spain.svg
+[tlrd-Spain]:      ./assets/images/tl-rates-deaths-Spain.svg
+
+[tldc-Sweden]: ./assets/images/tl-doubles-confirmed-Sweden.svg
+[tlrc-Sweden]:   ./assets/images/tl-rates-confirmed-Sweden.svg
+[tlrd-Sweden]:      ./assets/images/tl-rates-deaths-Sweden.svg
+
+[tldc-China]: ./assets/images/tl-doubles-confirmed-China.svg
+[tlrc-China]:   ./assets/images/tl-rates-confirmed-China.svg
+[tlrd-China]:      ./assets/images/tl-rates-deaths-China.svg
+
+[tldc-United_States]: ./assets/images/tl-doubles-confirmed-United_States.svg
+[tlrc-United_States]:   ./assets/images/tl-rates-confirmed-United_States.svg
+[tlrd-United_States]:      ./assets/images/tl-rates-deaths-United_States.svg
