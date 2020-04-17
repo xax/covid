@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 cName = 'covid2xa'
-cVersion = '4.5.2'
+cVersion = '4.6.0'
 cCopyright = 'Copyright (C) by XA, III - IV 2020. All rights reserved.'
 #
 # * Preparation to environment
@@ -536,12 +536,12 @@ if fTasks['tl_cases']:
     dftlCasesPop = dftlCasesPop.apply(lambda data: data / dftlCasesPop['population'][data.index] * 100000)
     dftlCasesPop = dftlCasesPop.iloc[:,0:-1]
 
-    df = dftlCasesPop.loc[['Belgium','Germany','Switzerland','France','Italy','Spain','Japan','South Korea','China','United States']].T
+    df = dftlCasesPop.loc[['Germany','Belgium','Netherlands','Switzerland','France','Italy','Spain','United Kingdom','United States','Japan','South Korea','China']].T
 
     fo = FigureObj()
     df.plot(ax=fo.ax,kind='line',
             logy=False,
-            marker='o',
+            marker='|',
             title='Confirmed cases per 100.000 capita ('+strDate+')',
             figsize=(13,8)
            )
@@ -569,7 +569,7 @@ if fTasks['tl_cases']:
     fo = FigureObj()
     df.plot(ax=fo.ax, kind='line',
             logy=True,
-            marker='o',
+            marker='|',
             title='Confirmed cases per 100.000 capita (log-y) ('+strDate+')',
             figsize=(13,8)
            )
@@ -602,12 +602,13 @@ if fTasks['gr_cases']:
     dftlCases = dfLoadCasesTLCovAPIv1()
     strDateFirst = dftlCases.iloc[:,0].name
     strDateLast = dftlCases.iloc[:,-1].name
-    countriesPreselect = ['Germany','Belgium','Netherlands','Switzerland','France','Italy','Spain','Sweden','Japan','South Korea','China','United States']
+    countriesPreselect = ['Germany','Belgium','Netherlands','Switzerland','France','Italy','Spain','Sweden','United Kingdom','United States','Japan','South Korea','China']
+
 
     dftlCases = provideTLPerCountry(dftlCases, countriesPreselect)
 
     #plt.subplots(6, 1)
-    countries = ('Germany','Belgium','Netherlands','Switzerland','Italy','Spain','Sweden','China','United States')
+    countries = ('Germany','Belgium','Netherlands','Switzerland','Italy','Spain','Sweden','United Kingdom','United States','Japan','South Korea','China')
 
     for country in countries:
         dfCountry = pd.DataFrame(dftlCases.loc[:,country])
@@ -674,7 +675,7 @@ if fTasks['gr_cases']:
     dftlCases = provideTLPerCountry(dftlCases, countriesPreselect)
 
     #plt.subplots(6, 1)
-    countries = ('Germany','Belgium','Netherlands','Switzerland','Italy','Spain','Sweden','China','United States')
+    countries = ('Germany','Belgium','Netherlands','Switzerland','Italy','Spain','Sweden','United Kingdom','United States','Japan','South Korea','China')
 
     for country in countries:
         dfCountry = pd.DataFrame(dftlCases.loc[:,country])
@@ -710,10 +711,10 @@ if fTasks['gr_cases']:
 
 if fTasks['gr_zeroday_cases']:
     dftlCases = dfLoadCasesTLCovAPIv1()
-    countriesPreselect = ['Germany','Belgium','Netherlands','Switzerland','France','Italy','Spain','Sweden','Japan','South Korea','China','United States']
+    countriesPreselect = ['Germany','Belgium','Netherlands','Switzerland','Italy','Spain','Sweden','United Kingdom','United States','Japan','South Korea','China']
     dftlCases = provideTLPerCountry(dftlCases, countriesPreselect)
 
-    countries = ['Germany','Belgium','Netherlands','Switzerland','Italy','Spain','Sweden','China','United States']
+    countries = ['Germany','Belgium','Netherlands','Switzerland','Italy','Spain','Sweden','United Kingdom','United States','Japan','South Korea','China']
     nBase = 100
 
     nRowsMax = dftlCases.shape[0]
@@ -729,7 +730,7 @@ if fTasks['gr_zeroday_cases']:
     fo = FigureObj()
     dfD.plot(ax=fo.ax, kind='line',
                 logy=True,
-                marker='o',
+                marker='|',
                 title='Confirmed cases relative to the day at least {:n} cases were on the record'.format(nBase),
                 figsize=(13,8)
             )
@@ -748,7 +749,7 @@ if fTasks['gr_zeroday_cases']:
     dftlCases = dfLoadCasesTLCovAPIv1(rcConfig.pDataCovidDataBase+'docs/v1/countries/deaths.csv')
     dftlCases = provideTLPerCountry(dftlCases, countriesPreselect)
 
-    countries = ['Germany','Belgium','Netherlands','Switzerland','Italy','Spain','Sweden','China','United States']
+    countries = ['Germany','Belgium','Netherlands','Switzerland','Italy','Spain','Sweden','United Kingdom','United States','Japan','South Korea','China']
     nBase = 10
 
     nRowsMax = dftlCases.shape[0]

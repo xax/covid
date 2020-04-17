@@ -11,6 +11,9 @@
 - [Spain](tl-cases-rates-Spain.md)
 - [Sweden](tl-cases-rates-Sweden.md)
 - [China](tl-cases-rates-China.md)
+- [Japan](tl-cases-rates-Japan.md)
+- [South Korea](tl-cases-rates-South_Korea.md)
+- [United Kingdom](tl-cases-rates-United_Kingdom.md)
 - [United States](tl-cases-rates-United_States.md)
 
  Germany  | &nbsp;
@@ -52,6 +55,21 @@
 :----------|------------
 [![(average) confirmed rates timeline][tldc-China]][tldc-China] |
 [![(average) confirmed rates timeline][tlrc-China]][tlrc-China] | [![(average) deaths rates timeline][tlrd-China]][tlrd-China]
+
+ Japan  | &nbsp;
+:----------|------------
+[![(average) confirmed rates timeline][tldc-Japan]][tldc-Japan] |
+[![(average) confirmed rates timeline][tlrc-Japan]][tlrc-Japan] | [![(average) deaths rates timeline][tlrd-Japan]][tlrd-Japan]
+
+ South Korea  | &nbsp;
+:----------|------------
+[![(average) confirmed rates timeline][tldc-South_Korea]][tldc-South_Korea] |
+[![(average) confirmed rates timeline][tlrc-South_Korea]][tlrc-South_Korea] | [![(average) deaths rates timeline][tlrd-South_Korea]][tlrd-South_Korea]
+
+ United Kingdom  | &nbsp;
+:----------|------------
+[![(average) confirmed rates timeline][tldc-United_Kingdom]][tldc-United_Kingdom] |
+[![(average) confirmed rates timeline][tlrc-United_Kingdom]][tlrc-United_Kingdom] | [![(average) deaths rates timeline][tlrd-United_Kingdom]][tlrd-United_Kingdom]
 
  United States  | &nbsp;
 :----------|------------
@@ -96,6 +114,18 @@
 [tldc-China]: ./assets/images/tl-doubles-confirmed-China.svg
 [tlrc-China]:   ./assets/images/tl-rates-confirmed-China.svg
 [tlrd-China]:      ./assets/images/tl-rates-deaths-China.svg
+
+[tldc-Japan]: ./assets/images/tl-doubles-confirmed-Japan.svg
+[tlrc-Japan]:   ./assets/images/tl-rates-confirmed-Japan.svg
+[tlrd-Japan]:      ./assets/images/tl-rates-deaths-Japan.svg
+
+[tldc-South_Korea]: ./assets/images/tl-doubles-confirmed-South_Korea.svg
+[tlrc-South_Korea]:   ./assets/images/tl-rates-confirmed-South_Korea.svg
+[tlrd-South_Korea]:      ./assets/images/tl-rates-deaths-South_Korea.svg
+
+[tldc-United_Kingdom]: ./assets/images/tl-doubles-confirmed-United_Kingdom.svg
+[tlrc-United_Kingdom]:   ./assets/images/tl-rates-confirmed-United_Kingdom.svg
+[tlrd-United_Kingdom]:      ./assets/images/tl-rates-deaths-United_Kingdom.svg
 
 [tldc-United_States]: ./assets/images/tl-doubles-confirmed-United_States.svg
 [tlrc-United_States]:   ./assets/images/tl-rates-confirmed-United_States.svg
