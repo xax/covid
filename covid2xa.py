@@ -289,7 +289,10 @@ class FigureObj(object):
         return self._ax[n]
 
     def _sanitizeFName (fName):
-        return fName.replace(' ', '_').replace('/', '_').replace('\\', '_').replace('%', '_').replace(':', '_').replace('>', '_').replace('<', '_').replace('`', '_')
+        return fName \
+            .replace(' ', '_').replace('/', '_').replace('\\', '_') \
+            .replace('%', '_').replace('$', '_').replace('`', '_') \
+            .replace('>', '_').replace('<', '_').replace('|', '_')
 
     def clear(self):
         self._fig.clear()
