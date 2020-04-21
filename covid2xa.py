@@ -560,7 +560,8 @@ if fTasks['tl_cases']:
     # fo.ax.xaxis.set_major_formatter(formatter)
     fo.axRotateLabels()
     fo.ax.minorticks_on()
-    fo.ax.grid(axis='x', which='both', linestyle=':', color='xkcd:light gray')
+    fo.ax.grid(axis='both', which='both', linestyle=':', color='xkcd:light gray')
+    fo.ax.grid(axis='y', which='minor', linestyle=(3, (1,6)), color='xkcd:light gray')
     fo.ax.legend(title='Countries')
     fo.ax.set_ylabel('cases · population${}^{-1}$ · 100000')
 
@@ -587,7 +588,9 @@ if fTasks['tl_cases']:
     # fo.ax.xaxis.set_major_formatter(formatter)
     fo.axRotateLabels()
     fo.ax.minorticks_on()
+    fo.ax.set_ylim(ymin=1e-3, ymax=1e3)
     fo.ax.grid(axis='x', which='both', linestyle=':', color='xkcd:light gray')
+    fo.ax.grid(axis='y', which='major', linestyle=':', color='xkcd:light gray')
     fo.ax.legend(title='Countries')
     fo.ax.set_ylabel('cases · population${}^{-1}$ · 100000')
 
