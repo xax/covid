@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 cName = 'covid2xa'
-cVersion = '4.6.0'
-cCopyright = 'Copyright (C) by XA, III - IV 2020. All rights reserved.'
+cVersion = '4.6.1'
+cCopyright = 'Copyright (C) by XA, III - V 2020. All rights reserved.'
 #
 # * Preparation to environment
 #
@@ -308,7 +308,7 @@ class FigureObj(object):
                     if e.errno != 22: # errno.???
                         raise  # re-raise if unrelated exception
                     #print("OSError {:n} on 'savefig' regarding '{:s}' ('{:s}')".format(e.errno, e.filename or '', e.filename2 or ''), file=sys.stderr, flush=True)
-                    print("OSError {:n} on 'savefig': {}".format(e.errno, e), file=sys.stderr, flush=True)
+                    print("OSError {:n} on 'savefig': {}\nRetry #{:n}".format(e.errno, e, cntRetry), file=sys.stderr, flush=True)
                 else:  # break from re-try loop on success
                     break
             else:  # out of tries
