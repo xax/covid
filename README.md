@@ -35,7 +35,7 @@ To run the visualization script you need *Python* (as of versions *3.6+*), of co
 
 2. clone [CovidData] repository
 
-    `$ git clone --depth=1https://github.com/coviddata/coviddata.git`
+    `$ git clone --depth=1 https://github.com/coviddata/coviddata.git`
 
 3. retrieve GeoNames [CountryDataGN] database
 
