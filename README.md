@@ -31,11 +31,11 @@ To run the visualization script you need *Python* (as of versions *3.6+*), of co
 
 1. clone [JHUCSSE] repository
 
-    `$ git clone -b wed-data https://github.com/CSSEGISandData/COVID-19.git`
+    `$ git clone --depth=1 -b web-data https://github.com/CSSEGISandData/COVID-19.git`
 
 2. clone [CovidData] repository
 
-    `$ git clone https://github.com/coviddata/coviddata.git`
+    `$ git clone --depth=1https://github.com/coviddata/coviddata.git`
 
 3. retrieve GeoNames [CountryDataGN] database
 
