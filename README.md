@@ -19,7 +19,8 @@ To run the visualization script you need *Python* (as of versions *3.6+*), of co
 1. install dependencies
 
     `$ pip install numpy matplotlib pandas`
-
+    `$ pip install adjustText`  *#* (*optional*)
+    
 2. install GUI visiualization backend (*optional*)
    To enable *matplotlib* to use *Tk* backend use a command appropriate for your system, e.g. one of these:
     - `$ sudo apt-get install python3-tk`  *# (Debian'ish)*
