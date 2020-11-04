@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 cName = 'covid2xa'
-cVersion = '4.6.1'
-cCopyright = 'Copyright (C) by XA, III - V 2020. All rights reserved.'
+cVersion = '4.6.2'
+cCopyright = 'Copyright (C) by XA, III - X 2020. All rights reserved.'
 #
 # * Preparation to environment
 #
@@ -13,13 +13,19 @@ cCopyright = 'Copyright (C) by XA, III - V 2020. All rights reserved.'
 #    $ pip install numpy matplotlib pandas
 #    $ pip install adjustText  # (optional)
 #
+#   #2 install Tk and Tk-python bindings to enable matplotlib
+#      to display figures in GUI
+#    $ sudo apt-get install python3-tk  # (Debian'ish)
+#    $ sudo dnf install python3-tkinter # (Fedora-flavoured)
+#    $ sudo pacman -S tk                # (Arch)
+#
 # * How to set it up:
 #
 #   #1 clone [JHUCSSE] repository
-#    $ git clone -b wed-data https://github.com/CSSEGISandData/COVID-19.git
+#    $ git clone --depth=1 -b web-data https://github.com/CSSEGISandData/COVID-19.git
 #
 #   #2 clone [CovidData] repository
-#    $ git clone https://github.com/coviddata/coviddata.git
+#    $ git clone --depth=1 https://github.com/coviddata/coviddata.git
 #
 #   #3 retrieve GeoNmes [CountryDataGN] database
 #    $ wget https://download.geonames.org/export/dump/countryInfo.txt
