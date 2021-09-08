@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
+# %%
 cName = 'covid2xa'
-cVersion = '4.6.2'
-cCopyright = 'Copyright (C) by XA, III - X 2020. All rights reserved.'
+cVersion = '4.7.0'
+cCopyright = 'Copyright (C) by XA, III 2020 - IX 2021. All rights reserved.'
 #
 # * Preparation to environment
 #
@@ -211,7 +212,7 @@ def dfLoadCountriesDataStatJHUWDv3 (fname=rcConfig.pDataJHUWDBase+'cases_country
                      header=0,
                      index_col=0, #'country',
                      # v3: Country_Region,Last_Update,Lat,Long_,Confirmed,Deaths,Recovered,Active,Incident_Rate,People_Tested,People_Hospitalized,Mortality_Rate,UID,ISO3
-                     names=['country', 'upd', 'lat', 'lon', 'confirmed', 'deaths', 'recovered', 'active', 'incidencerate', 'tested', 'hospitalized', 'mortalityrate', 'uid', 'cocoISO3']
+                     names=['upd', 'lat', 'lon', 'confirmed', 'deaths', 'recovered', 'active', 'incidencerate', 'tested', 'hospitalized', 'mortalityrate', 'uid', 'cocoISO3']
                     )
     #Python 3.7+: tUpdate = df['upd'].apply(lambda x: pd.Timestamp.fromisoformat(x)).max()
     tUpdate = df['upd'].apply(lambda x: datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S')).max()
@@ -219,7 +220,25 @@ def dfLoadCountriesDataStatJHUWDv3 (fname=rcConfig.pDataJHUWDBase+'cases_country
     return df, tUpdate.to_pydatetime()
 
 
-dfLoadCountriesDataStatJHUWD = dfLoadCountriesDataStatJHUWDv3
+def dfLoadCountriesDataStatJHUWDv4 (fname=rcConfig.pDataJHUWDBase+'cases_country.csv'):
+    ''' Load JHU `cases per country` snapshot data .
+        # https://raw.githubusercontent.com/CSSEGISandData/COVID-19/web-data/data/cases_country.csv
+    '''
+    df = pd.read_csv(rcConfig.pDataJHUWDBase+'cases_country.csv',#fname,
+                     header=0,
+                     index_col=0, #'country',
+                     # v4: Country_Region,Last_Update,Lat,Long_,Confirmed,Deaths,Recovered,Active,Incident_Rate,People_Tested,People_Hospitalized,Mortality_Rate,UID,ISO3,Cases_28_Days,Deaths_28_Days
+                     names=['upd', 'lat', 'lon', 'confirmed', 'deaths', 'recovered', 'active', 'incidencerate', 'tested', 'hospitalized', 'mortalityrate', 'uid', 'cocoISO3', 'Cases28days', 'Deaths28days']
+                    )
+    #Python 3.7+:
+    tUpdate = df['upd'].apply(lambda x: pd.Timestamp.fromisoformat(x)).max()
+    # tUpdate = df['upd'].apply(lambda x: datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S')).max()
+    #Python -3.7:
+    # tUpdate.tz_localize('UTC')
+    return df, tUpdate.to_pydatetime()
+
+
+dfLoadCountriesDataStatJHUWD = dfLoadCountriesDataStatJHUWDv4
 
 
 def dfLoadCasesTLCovAPIv1 (fname=rcConfig.pDataCovidDataBase+'docs/v1/countries/cases.csv'):
@@ -387,7 +406,6 @@ if fTasks['cases']:
              title='Case numbers ('+theDate+')',
              figsize=(10,8))
 
-    # %%
     fo.ax.set_xlabel('capita')
     fo.ax.set_ylabel('Country')
 
@@ -415,14 +433,14 @@ if fTasks['prevalence']:
              color='xkcd:bright blue',
              title='Prevalence ('+theDate+')',
              figsize=(10,8))
-    # %%
+    #
     fo.ax.set_xlabel('capita / 100000')
     fo.ax.set_ylabel('Country')
 
     fo.show('preval-r.svg')
 
 
-    # %%
+    #
     dfB = dfData.sort_values(by='prevalence_agg', ascending=False)
     dfB = dfB.head(30)
     # [FIXES] force appearance of China
@@ -453,7 +471,7 @@ if fTasks['rates']:
     if not dfC.index.isin(['China']).any(): dfC = dfC.append(dfData.loc['China',:])
     # [/FIXES]
 
-    # %%
+    #
     fo = FigureObj()
     dfC.plot(ax=fo.ax, kind='barh',
              stacked=False, logx=True,
@@ -527,7 +545,7 @@ if fTasks['deathrate']:
             rnd = np.random.random() * 40 - 20
             texts.append(fo.ax.text(r.confirmed, r.deaths, r.Index, rotation=20+rnd, size=9))
 
-    # %%
+    #
     fo.show('cases-deaths-ll.svg')
 
 
@@ -602,7 +620,7 @@ if fTasks['tl_cases']:
     fo.ax.legend(title='Countries')
     fo.ax.set_ylabel('cases · population${}^{-1}$ · 100000')
 
-    # %%
+    #
     fo.show('tl-cases-rl.svg')
 
 
