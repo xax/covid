@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # %%
 cName = 'covid2xa'
-cVersion = '4.7.0'
-cCopyright = 'Copyright (C) by XA, III 2020 - IX 2021. All rights reserved.'
+cVersion = '4.7.1'
+cCopyright = 'Copyright (C) by XA, III 2020 - V 2022. All rights reserved.'
 #
 # * Preparation to environment
 #
@@ -395,7 +395,7 @@ if fTasks['cases']:
         dfA = dfData.sort_values(by=['active'], ascending=False)
     dfA = dfA.head(20)
     # [FIXES] force appearance of China
-    if not dfA.index.isin(['China']).any(): dfA = dfA.append(dfData.loc['China',:])
+    if not dfA.index.isin(['China']).any(): dfA = pd.concat([dfA, dfData.loc['China',:]])
     # [/FIXES]
 
     fo = FigureObj()
@@ -424,7 +424,7 @@ if fTasks['prevalence']:
     dfB = dfData.sort_values(by='prevalence', ascending=False)
     dfB = dfB.head(30)
     # [FIXES] force appearance of China
-    # if not dfB.index.isin(['China']).any(): dfB = dfB.append(dfData.loc['China',:])
+    # if not dfB.index.isin(['China']).any(): dfB = pd.concat([dfB, dfData.loc['China',:]])
     # [/FIXES]
 
     fo = FigureObj()
@@ -444,7 +444,7 @@ if fTasks['prevalence']:
     dfB = dfData.sort_values(by='prevalence_agg', ascending=False)
     dfB = dfB.head(30)
     # [FIXES] force appearance of China
-    if not dfB.index.isin(['China']).any(): dfB = dfB.append(dfData.loc['China',:])
+    if not dfB.index.isin(['China']).any(): dfB = pd.concat([dfB, dfData.loc['China',:]])
     # [/FIXES]
 
     fo = FigureObj()
@@ -468,7 +468,7 @@ if fTasks['rates']:
     dfC = dfData.sort_values(by='deathrate', ascending=False)
     dfC = dfC.head(30)
     # [FIXES] force appearance of China
-    if not dfC.index.isin(['China']).any(): dfC = dfC.append(dfData.loc['China',:])
+    if not dfC.index.isin(['China']).any(): dfC = pd.concat([dfC, dfData.loc['China',:]])
     # [/FIXES]
 
     #
