@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # %%
 cName = 'covid2xa'
-cVersion = '4.7.1'
-cCopyright = 'Copyright (C) by XA, III 2020 - V 2022. All rights reserved.'
+cVersion = '4.8.0'
+cCopyright = 'Copyright (C) by XA, III 2020 - III 2024. All rights reserved.'
 #
 # * Preparation to environment
 #
@@ -539,7 +539,7 @@ if fTasks['deathrate']:
         if fOptions['noshow']:
             import matplotlib.backend_bases
             fo.fig.canvas.renderer = matplotlib.backend_bases.RendererBase()
-        adjustText.adjust_text(texts, ax=fo.ax, lim=20, arrowprops=dict(arrowstyle='->', color='orange'))
+        adjustText.adjust_text(texts, ax=fo.ax, iter_lim=20, arrowprops=dict(arrowstyle='->', color='orange'))
     else:
         for r in dfD.itertuples():
             rnd = np.random.random() * 40 - 20
